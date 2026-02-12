@@ -65,13 +65,13 @@ export default function Onboard() {
     if (step === 1) {
       return info({
         title: 'Greetings, Earthling! 👾',
-        text: "Your Bitcoin has entered a new dimension. Send, receive, and swap in Arkade's virtual environment. Space-time limits don't apply. Experience the future of Bitcoin today.",
+        text: "Your Bitcoin has entered a new dimension. Send, receive, and swap in Chimera's virtual environment. Space-time limits don't apply. Experience the future of Bitcoin today.",
       })
     }
     if (step === 2) {
       return info({
         title: 'Leveling up',
-        text: 'Arkade is your gateway to a new generation of Bitcoin-native applications. Access Lightning payments, DeFi, assets, and more—all secured by Bitcoin.',
+        text: 'Chimera is your gateway to a new generation of Bitcoin-native applications. Access Lightning payments, DeFi, assets, and more—all secured by Bitcoin.',
       })
     }
     if (step === 3) {
@@ -83,8 +83,8 @@ export default function Onboard() {
     if (step === 4) {
       return (
         <FlexCol gap='0.5rem'>
-          <Title text='Install Arkade on Home' />
-          <Text wrap>Adding Arkade to Home enable push notifications and better user experience.</Text>
+          <Title text='Install Chimera on Home' />
+          <Text wrap>Adding Chimera to Home enable push notifications and better user experience.</Text>
           <Shadow purple>
             <FlexCol gap='1rem'>
               <FlexRow>

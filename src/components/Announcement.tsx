@@ -50,7 +50,7 @@ const Tag = ({ text }: { text: string }) => (
       display: 'inline-block',
       padding: '0.25rem 0.75rem',
       color: 'var(--white)',
-      backgroundColor: 'var(--purple)',
+      backgroundColor: 'var(--blue-primary)',
     }}
   >
     Introducing: {text}
@@ -210,7 +210,7 @@ export function NostrBackupsAnnouncement({ close }: { close: () => void }) {
       icon={<NostrIcon big />}
       message='Backup to Nostr.'
       bulletPoints={[
-        ['Backup settings', 'Have your Arkade wallet settings safely backed up on Nostr.'],
+        ['Backup settings', 'Have your Chimera wallet settings safely backed up on Nostr.'],
         ['Boltz swaps', 'Easily restore your Boltz swap history if you switch devices.'],
         ['Secure', 'All backups are encrypted and stored securely on the Nostr network.'],
       ]}

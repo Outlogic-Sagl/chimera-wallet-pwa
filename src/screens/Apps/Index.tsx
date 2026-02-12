@@ -1,4 +1,4 @@
-import { ReactElement, useContext } from 'react'
+import { useContext } from 'react'
 import Content from '../../components/Content'
 import FlexRow from '../../components/FlexRow'
 import Padded from '../../components/Padded'
@@ -6,11 +6,7 @@ import Header from '../../components/Header'
 import FlexCol from '../../components/FlexCol'
 import Text from '../../components/Text'
 import Shadow from '../../components/Shadow'
-import FujiMoneyIcon from '../../icons/FujiMoney'
-import BoltzIcon from '../../icons/Boltz'
 import { NavigationContext, Pages } from '../../providers/navigation'
-import LendasatIcon from './Lendasat/LendasatIcon'
-import LendaswapIcon from './Lendaswap/LendaswapIcon'
 import Focusable from '../../components/Focusable'
 
 const Middot = () => (
@@ -22,7 +18,7 @@ const Middot = () => (
 const Tag = ({ kind }: { kind: 'new' | 'coming soon' }) => {
   const style: React.CSSProperties = {
     borderRadius: '4px',
-    background: kind === 'coming soon' ? 'rgba(96, 177, 138, 0.10)' : 'rgba(57, 25, 152, 1)',
+    background: kind === 'coming soon' ? 'rgba(96, 177, 138, 0.10)' : 'var(--blue-primary, rgba(57, 25, 152, 1))',
     color: kind === 'coming soon' ? 'var(--green)' : 'var(--white)',
     fontFamily: 'Geist Mono',
     fontSize: '12px',
@@ -46,7 +42,7 @@ const Tag = ({ kind }: { kind: 'new' | 'coming soon' }) => {
 
 interface AppProps {
   desc: string
-  icon: ReactElement
+  icon: string
   name: string
   live?: boolean
   link?: string
@@ -68,7 +64,11 @@ function App({ desc, icon, link, name, live, page }: AppProps) {
       <Shadow border borderPurple={live} onClick={handleClick}>
         <FlexCol gap='0.75rem' padding='0.5rem' testId={testId}>
           <FlexRow between>
-            {icon}
+            <img
+              src={icon}
+              alt={`${name} icon`}
+              style={{ width: 55, height: 55, borderRadius: 8, objectFit: 'contain' }}
+            />
             <FlexCol gap='0.25rem'>
               <FlexRow between>
                 <Text bold>{name}</Text>
@@ -96,32 +96,36 @@ export default function Apps() {
         <Padded>
           <FlexCol>
             <App
-              name='Boltz'
-              icon={<BoltzIcon />}
-              desc='Swap instantly between Arkade and Lightning'
-              link='https://boltz.exchange/'
-              page={Pages.AppBoltz}
+              name='Statement'
+              icon='/images/apps/Statement.png'
+              desc='View your transaction history and account statements'
+              page={Pages.AppStatement}
               live
             />
 
             <App
-              name='LendaSat'
-              icon={<LendasatIcon />}
-              desc='Borrow against your sats'
-              link='https://lendasat.com'
-              page={Pages.AppLendasat}
+              name='Referral'
+              icon='/images/apps/Referral.png'
+              desc='Invite friends and earn rewards'
+              page={Pages.AppReferral}
               live
             />
 
             <App
-              name='LendaSwap'
-              icon={<LendaswapIcon />}
-              desc='Swap Bitcoin to USDC instantly'
-              link='https://swap.lendasat.com'
-              page={Pages.AppLendaswap}
+              name='Gift Cards'
+              icon='/images/apps/Card.png'
+              desc='Buy and redeem gift cards with Bitcoin'
+              page={Pages.AppGiftCards}
               live
             />
-            <App name='Fuji Money' icon={<FujiMoneyIcon />} desc='Synthetic Assets on the Bitcoin network' />
+
+            <App
+              name='Card Reservation'
+              icon='/images/apps/Card.png'
+              desc='Reserve your Chimera debit card'
+              page={Pages.AppCardReservation}
+              live
+            />
           </FlexCol>
         </Padded>
       </Content>
