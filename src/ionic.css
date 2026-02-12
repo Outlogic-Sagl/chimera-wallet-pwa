@@ -1,6 +1,7 @@
 :root {
   --black: #040404;
   --blue-primary: #1F3BDB;
+  --blue-dark: #061A8E;
   --cream: #391998;
   --dark80: rgba(var(--ion-color-dark-rgb), 0.8);
   --dark70: rgba(var(--ion-color-dark-rgb), 0.7);

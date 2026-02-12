@@ -5,7 +5,7 @@ export default function Bullet({ number }: { number: number }) {
     alignItems: 'center',
     width: '1.5rem',
     height: '1.5rem',
-    background: 'var(--magenta)',
+    background: 'var(--blue-primary)',
     borderRadius: '999px',
   } as React.CSSProperties
   return <div style={style}>{number}</div>
