@@ -26,6 +26,10 @@ import InitSuccess from '../screens/Init/Success'
 import AppBoltzSwap from '../screens/Apps/Boltz/Swap'
 import AppLendasat from '../screens/Apps/Lendasat/Index'
 import AppLendaswap from '../screens/Apps/Lendaswap/Index'
+import AppStatement from '../screens/Apps/Statement/Index'
+import AppReferral from '../screens/Apps/Referral/Index'
+import AppGiftCards from '../screens/Apps/GiftCards/Index'
+import AppCardReservation from '../screens/Apps/CardReservation/Index'
 import Unavailable from '../screens/Wallet/Unavailable'
 
 export enum Pages {
@@ -34,6 +38,10 @@ export enum Pages {
   AppBoltzSwap,
   AppLendasat,
   AppLendaswap,
+  AppStatement,
+  AppReferral,
+  AppGiftCards,
+  AppCardReservation,
   Apps,
   Init,
   InitRestore,
@@ -72,6 +80,10 @@ const pageTab = {
   [Pages.AppBoltzSwap]: Tabs.Apps,
   [Pages.AppLendasat]: Tabs.Apps,
   [Pages.AppLendaswap]: Tabs.Apps,
+  [Pages.AppStatement]: Tabs.Apps,
+  [Pages.AppReferral]: Tabs.Apps,
+  [Pages.AppGiftCards]: Tabs.Apps,
+  [Pages.AppCardReservation]: Tabs.Apps,
   [Pages.Apps]: Tabs.Apps,
   [Pages.Init]: Tabs.None,
   [Pages.InitRestore]: Tabs.None,
@@ -109,6 +121,14 @@ export const pageComponent = (page: Pages): JSX.Element => {
       return <AppLendasat />
     case Pages.AppLendaswap:
       return <AppLendaswap />
+    case Pages.AppStatement:
+      return <AppStatement />
+    case Pages.AppReferral:
+      return <AppReferral />
+    case Pages.AppGiftCards:
+      return <AppGiftCards />
+    case Pages.AppCardReservation:
+      return <AppCardReservation />
     case Pages.Apps:
       return <Apps />
     case Pages.Init:

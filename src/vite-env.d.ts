@@ -6,7 +6,11 @@ interface ImportMetaEnv {
   readonly VITE_SENTRY_DSN?: string
   readonly VITE_ARK_SERVER?: string
   readonly VITE_BOLTZ_URL?: string
-  // Add other env variables as needed
+  // App URLs
+  readonly VITE_GIFT_CARDS_URL?: string
+  readonly VITE_CARD_RESERVATION_URL?: string
+  readonly VITE_STATEMENT_URL?: string
+  readonly VITE_REFERRAL_URL?: string
 }
 
 interface ImportMeta {

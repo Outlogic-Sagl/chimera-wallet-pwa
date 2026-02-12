@@ -3847,7 +3847,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 123.321 89.6899)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <foreignObject x='48.2885' y='62.2499' width='28.8662' height='28.8664'>
         <div
@@ -3863,7 +3863,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 75.0779 64.6533)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
         fillOpacity='0.5'
       />
       <foreignObject x='47.6351' y='111.022' width='28.8662' height='28.8664'>
@@ -3880,7 +3880,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 74.4245 113.425)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
         fillOpacity='0.5'
       />
       <foreignObject x='23.2496' y='110.695' width='28.8662' height='28.8664'>
@@ -3897,7 +3897,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 50.039 113.099)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
         fillOpacity='0.5'
       />
       <rect
@@ -3905,55 +3905,55 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 147.003 138.752)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 98.9343 89.3633)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 98.6075 113.749)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.0133936 0.99991 0.99991 0.0133936 50.3656 88.7129)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 122.994 114.076)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 74.0977 137.811)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.99991 -0.0133936 -0.0133936 0.99991 122.668 138.462)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.0133936 0.99991 0.99991 0.0133936 75.0779 64.6533)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         width='24.3882'
         height='24.3882'
         transform='matrix(-0.0133936 0.99991 0.99991 0.0133936 26.3065 64)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         opacity='0.5'
@@ -3962,7 +3962,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 267.662 368.69)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <foreignObject x='313.828' y='341.25' width='28.8662' height='28.8664'>
         <div
@@ -3980,7 +3980,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 315.905 343.653)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
         fillOpacity='0.5'
       />
       <foreignObject x='314.482' y='390.022' width='28.8662' height='28.8664'>
@@ -3999,7 +3999,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 316.559 392.425)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
         fillOpacity='0.5'
       />
       <foreignObject x='338.867' y='389.695' width='28.8662' height='28.8664'>
@@ -4018,7 +4018,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 340.944 392.099)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
         fillOpacity='0.5'
       />
       <rect
@@ -4028,7 +4028,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 243.98 417.752)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='292.049'
@@ -4036,7 +4036,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 292.049 368.363)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='292.376'
@@ -4044,7 +4044,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 292.376 392.749)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='340.617'
@@ -4052,7 +4052,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(89.2326 340.617 367.713)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='267.989'
@@ -4060,7 +4060,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 267.989 393.076)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='316.885'
@@ -4068,7 +4068,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 316.885 416.811)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='268.316'
@@ -4076,7 +4076,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(-0.767422 268.316 417.462)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='315.905'
@@ -4084,7 +4084,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(89.2326 315.905 343.653)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <rect
         x='364.677'
@@ -4092,7 +4092,7 @@ export function OnboardImage3() {
         width='24.3882'
         height='24.3882'
         transform='rotate(89.2326 364.677 343)'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <circle cx='114.848' cy='186.873' r='0.848101' fill='black' fillOpacity='0.5' />
       <circle cx='131.386' cy='203.411' r='0.424051' fill='black' fillOpacity='0.5' />
@@ -4125,7 +4125,7 @@ export function OnboardImage3() {
       <circle cx='261.449' cy='326.803' r='1.27215' fill='black' fillOpacity='0.5' />
       <path
         d='M241.106 198.387H151.737V206.256H144.431L143.869 295.624H152.3V303.493L241.106 302.931V296.186H249.537L248.975 206.256H241.106V198.387Z'
-        fill='var(--purple)'
+        fill='var(--blue-primary)'
       />
       <path
         d='M241.106 198.387H151.737V206.256H144.431L143.869 295.624H152.3V303.493L241.106 302.931V296.186H249.537L248.975 206.256H241.106V198.387Z'
@@ -4148,7 +4148,7 @@ export function OnboardImage3() {
       <rect width='8.09374' height='8.09374' transform='matrix(-1 0 0 1 234.743 212.619)' fill='var(--white)' />
       <rect width='8.09374' height='8.09374' transform='matrix(-1 0 0 1 234.743 280.606)' fill='var(--white)' />
       <rect width='8.09374' height='8.09374' transform='matrix(-1 0 0 1 166.756 280.606)' fill='var(--white)' />
-      <rect width='8.09374' height='8.09374' transform='matrix(-1 0 0 1 249.312 295.984)' fill='var(--purple)' />
+      <rect width='8.09374' height='8.09374' transform='matrix(-1 0 0 1 249.312 295.984)' fill='var(--blue-primary)' />
       <defs>
         <clipPath id='paint0_angular_3383_10956_clip_path'>
           <path

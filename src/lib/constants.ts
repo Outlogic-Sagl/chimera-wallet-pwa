@@ -1,7 +1,7 @@
 export const arknoteHRP = 'arknote'
 export const defaultFee = 0
 export const testDomains = ['dev.arkade.money', 'next.arkade.money', 'pages.dev', 'localhost']
-export const devServer = 'http://localhost:7070'
+export const devServer = 'https://arkade.computer'
 export const testServer = 'https://arkade.computer'
 export const mainServer = 'https://arkade.computer'
 export const defaultPassword = 'noah'

@@ -4,7 +4,6 @@ import ErrorMessage from '../../components/Error'
 import TransactionsList from '../../components/TransactionsList'
 import { WalletContext } from '../../providers/wallet'
 import { AspContext } from '../../providers/asp'
-import LogoIcon from '../../icons/Logo'
 import Padded from '../../components/Padded'
 import Content from '../../components/Content'
 import FlexCol from '../../components/FlexCol'
@@ -51,7 +50,11 @@ export default function Wallet() {
         <Padded>
           <FlexCol>
             <FlexCol gap='0'>
-              <LogoIcon small />
+              <img
+                src='/arkade-icon.png'
+                alt='Arkade logo'
+                style={{ width: 40, height: 40, objectFit: 'contain' }}
+              />
               <Balance amount={balance} />
               <ErrorMessage error={error} text='Ark server unreachable' />
               <FlexRow padding='0 0 0.5rem 0'>

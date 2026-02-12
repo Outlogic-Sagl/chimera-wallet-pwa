@@ -16,7 +16,7 @@ interface AlertBoxProps {
 function AlertBox({ children, icon, onClick, onDismiss }: AlertBoxProps) {
   const style: Record<string, React.CSSProperties> = {
     alert: {
-      backgroundColor: 'var(--purple20)',
+      backgroundColor: 'var(--blue-primary)',
       border: '1px solid var(--dark20)',
       borderRadius: '0.5rem',
       padding: '0.5rem',
@@ -25,7 +25,7 @@ function AlertBox({ children, icon, onClick, onDismiss }: AlertBoxProps) {
       width: '100%',
     },
     icon: {
-      backgroundColor: 'var(--purple)',
+      backgroundColor: 'var(--blue-primary)',
       borderRadius: '6px',
       padding: '5px',
     },

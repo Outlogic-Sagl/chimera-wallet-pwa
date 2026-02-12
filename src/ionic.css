@@ -1,5 +1,6 @@
 :root {
   --black: #040404;
+  --blue-primary: #1F3BDB;
   --cream: #391998;
   --dark80: rgba(var(--ion-color-dark-rgb), 0.8);
   --dark70: rgba(var(--ion-color-dark-rgb), 0.7);
@@ -27,7 +28,7 @@
   --yellow: #e2c542;
   --yellowoutlier: #debb20;
   --ion-background-color: #fff;
-  --ion-background-focused: var(--purple20);
+  --ion-background-focused: var(--blue-primary);
   --ion-tabbar-background-color: #fafafa;
   --ion-backdrop-color: #fff;
   --toggle-background: #fbfbfb;
@@ -96,8 +97,8 @@ ion-button {
     --color: var(--black);
   }
   &.dark {
-    --background: var(--purple);
-    --border-color: var(--purple);
+    --background: var(--blue-primary);
+    --border-color: var(--blue-primary);
     --color: white;
   }
   &.outline {
@@ -243,7 +244,7 @@ ion-toggle {
   --track-background-checked: var(--toggle-background);
 
   --handle-background: var(--grey);
-  --handle-background-checked: var(--purple);
+  --handle-background-checked: var(--blue-primary);
 
   --handle-width: 15px;
   --handle-height: 15px;
