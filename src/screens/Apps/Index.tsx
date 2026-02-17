@@ -8,6 +8,10 @@ import Text from '../../components/Text'
 import Shadow from '../../components/Shadow'
 import { NavigationContext, Pages } from '../../providers/navigation'
 import Focusable from '../../components/Focusable'
+import BoltzIcon from '../../icons/Boltz'
+import FujiMoneyIcon from '../../icons/FujiMoney'
+import LendasatIcon from './Lendasat/LendasatIcon'
+import LendaswapIcon from './Lendaswap/LendaswapIcon'
 
 const Middot = () => (
   <svg width='6' height='6' viewBox='0 0 6 6' fill='none' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'>
@@ -42,14 +46,15 @@ const Tag = ({ kind }: { kind: 'new' | 'coming soon' }) => {
 
 interface AppProps {
   desc: string
-  icon: string
+  icon?: React.ReactElement
+  image?: string
   name: string
   live?: boolean
   link?: string
   page?: Pages
 }
 
-function App({ desc, icon, link, name, live, page }: AppProps) {
+function App({ desc, icon, image, link, name, live, page }: AppProps) {
   const { navigate } = useContext(NavigationContext)
 
   const handleClick = () => {
@@ -64,11 +69,17 @@ function App({ desc, icon, link, name, live, page }: AppProps) {
       <Shadow border borderPurple={live} onClick={handleClick}>
         <FlexCol gap='0.75rem' padding='0.5rem' testId={testId}>
           <FlexRow between>
-            <img
-              src={icon}
-              alt={`${name} icon`}
-              style={{ width: 55, height: 55, borderRadius: 8, objectFit: 'contain' }}
-            />
+            {image ? (
+              <img
+                src={image}
+                alt={`${name} icon`}
+                style={{ width: 55, height: 55, borderRadius: 8, objectFit: 'contain' }}
+              />
+            ) : (
+              <div style={{ width: 55, height: 55, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {icon}
+              </div>
+            )}
             <FlexCol gap='0.25rem'>
               <FlexRow between>
                 <Text bold>{name}</Text>
@@ -97,7 +108,7 @@ export default function Apps() {
           <FlexCol>
             <App
               name='Statement'
-              icon='/images/apps/Statement.png'
+              image='/images/apps/Statement.png'
               desc='View your transaction history and account statements'
               page={Pages.AppStatement}
               live
@@ -105,7 +116,7 @@ export default function Apps() {
 
             <App
               name='Referral'
-              icon='/images/apps/Referral.png'
+              image='/images/apps/Referral.png'
               desc='Invite friends and earn rewards'
               page={Pages.AppReferral}
               live
@@ -113,7 +124,7 @@ export default function Apps() {
 
             <App
               name='Gift Cards'
-              icon='/images/apps/Card.png'
+              image='/images/apps/Card.png'
               desc='Buy and redeem gift cards with Bitcoin'
               page={Pages.AppGiftCards}
               live
@@ -121,11 +132,39 @@ export default function Apps() {
 
             <App
               name='Card Reservation'
-              icon='/images/apps/Card.png'
+              image='/images/apps/Card.png'
               desc='Reserve your Chimera debit card'
               page={Pages.AppCardReservation}
               live
             />
+
+            <App
+              name='Boltz'
+              icon={<BoltzIcon />}
+              desc='Swap instantly between Arkade and Lightning'
+              link='https://boltz.exchange/'
+              page={Pages.AppBoltz}
+              live
+            />
+
+            <App
+              name='LendaSat'
+              icon={<LendasatIcon />}
+              desc='Borrow against your sats'
+              link='https://lendasat.com'
+              page={Pages.AppLendasat}
+              live
+            />
+
+            <App
+              name='LendaSwap'
+              icon={<LendaswapIcon />}
+              desc='Swap Bitcoin to USDC instantly'
+              link='https://swap.lendasat.com'
+              page={Pages.AppLendaswap}
+              live
+            />
+            <App name='Fuji Money' icon={<FujiMoneyIcon />} desc='Synthetic Assets on the Bitcoin network' />
           </FlexCol>
         </Padded>
       </Content>
