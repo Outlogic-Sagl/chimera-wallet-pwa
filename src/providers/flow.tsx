@@ -18,6 +18,12 @@ export interface DeepLinkInfo {
   query?: string
 }
 
+export interface KycAuthParams {
+  uid: string
+  code: string
+  type?: string
+}
+
 export interface RecvInfo {
   boardingAddr: string
   offchainAddr: string
@@ -46,6 +52,7 @@ export type TxInfo = Tx | undefined
 
 interface FlowContextProps {
   initInfo: InitInfo
+  kycAuthParams: KycAuthParams | undefined
   noteInfo: NoteInfo
   deepLinkInfo: DeepLinkInfo | undefined
   recvInfo: RecvInfo
@@ -53,6 +60,7 @@ interface FlowContextProps {
   swapInfo: SwapInfo
   txInfo: TxInfo
   setInitInfo: (arg0: InitInfo) => void
+  setKycAuthParams: (arg0: KycAuthParams | undefined) => void
   setNoteInfo: (arg0: NoteInfo) => void
   setDeepLinkInfo: (arg0: DeepLinkInfo) => void
   setRecvInfo: (arg0: RecvInfo) => void
@@ -88,6 +96,7 @@ export const emptySendInfo: SendInfo = {
 
 export const FlowContext = createContext<FlowContextProps>({
   initInfo: emptyInitInfo,
+  kycAuthParams: undefined,
   noteInfo: emptyNoteInfo,
   deepLinkInfo: undefined,
   recvInfo: emptyRecvInfo,
@@ -95,6 +104,7 @@ export const FlowContext = createContext<FlowContextProps>({
   swapInfo: undefined,
   txInfo: undefined,
   setInitInfo: () => {},
+  setKycAuthParams: () => {},
   setNoteInfo: () => {},
   setDeepLinkInfo: () => {},
   setRecvInfo: () => {},
@@ -105,6 +115,7 @@ export const FlowContext = createContext<FlowContextProps>({
 
 export const FlowProvider = ({ children }: { children: ReactNode }) => {
   const [initInfo, setInitInfo] = useState(emptyInitInfo)
+  const [kycAuthParams, setKycAuthParams] = useState<KycAuthParams | undefined>()
   const [noteInfo, setNoteInfo] = useState(emptyNoteInfo)
   const [deepLinkInfo, setDeepLinkInfo] = useState<DeepLinkInfo | undefined>()
   const [recvInfo, setRecvInfo] = useState(emptyRecvInfo)
@@ -116,6 +127,7 @@ export const FlowProvider = ({ children }: { children: ReactNode }) => {
     <FlowContext.Provider
       value={{
         initInfo,
+        kycAuthParams,
         noteInfo,
         deepLinkInfo,
         recvInfo,
@@ -123,6 +135,7 @@ export const FlowProvider = ({ children }: { children: ReactNode }) => {
         swapInfo,
         txInfo,
         setInitInfo,
+        setKycAuthParams,
         setNoteInfo,
         setDeepLinkInfo,
         setRecvInfo,

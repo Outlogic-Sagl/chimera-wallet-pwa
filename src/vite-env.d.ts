@@ -11,6 +11,9 @@ interface ImportMetaEnv {
   readonly VITE_CARD_RESERVATION_URL?: string
   readonly VITE_STATEMENT_URL?: string
   readonly VITE_REFERRAL_URL?: string
+  // KYC/IDFlow URLs
+  readonly VITE_KYC_WEBVIEW_URL?: string
+  readonly VITE_KYC_API_URL?: string
 }
 
 interface ImportMeta {

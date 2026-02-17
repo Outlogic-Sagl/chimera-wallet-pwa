@@ -1,6 +1,9 @@
 import { ReactElement, ReactNode, createContext, useState } from 'react'
+import AddressBookIcon from '../icons/AddressBook'
 import BackupIcon from '../icons/Backup'
 import InfoIcon from '../icons/Info'
+import KnowledgeBaseIcon from '../icons/KnowledgeBase'
+import KYCIcon from '../icons/KYC'
 import NotificationIcon from '../icons/Notification'
 import ResetIcon from '../icons/Reset'
 import NotesIcon from '../icons/Notes'
@@ -20,6 +23,21 @@ export interface Option {
 }
 
 export const options: Option[] = [
+  {
+    icon: <KYCIcon />,
+    option: SettingsOptions.KYC,
+    section: SettingsSections.Account,
+  },
+  {
+    icon: <KnowledgeBaseIcon />,
+    option: SettingsOptions.KnowledgeBase,
+    section: SettingsSections.Account,
+  },
+  {
+    icon: <AddressBookIcon />,
+    option: SettingsOptions.AddressBook,
+    section: SettingsSections.Account,
+  },
   {
     icon: <InfoIcon />,
     option: SettingsOptions.About,
@@ -107,7 +125,7 @@ export interface SectionResponse {
   options: Option[]
 }
 
-const allOptions: SectionResponse[] = [SettingsSections.General, SettingsSections.Security].map((section) => {
+const allOptions: SectionResponse[] = [SettingsSections.Account, SettingsSections.General, SettingsSections.Security].map((section) => {
   return {
     section,
     options: options.filter((o) => o.section === section),

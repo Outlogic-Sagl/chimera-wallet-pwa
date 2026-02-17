@@ -7,7 +7,8 @@ import { AspContext } from './asp'
 import { NotificationsContext } from './notifications'
 import { FlowContext } from './flow'
 import { arkNoteInUrl } from '../lib/arknote'
-import { deepLinkInUrl } from '../lib/deepLink'
+import { deepLinkInUrl, clearDeepLinkFromUrl } from '../lib/deepLink'
+import { parseKycDeepLink } from '../lib/kyc'
 import { consoleError } from '../lib/logs'
 import { Tx, Vtxo, Wallet } from '../lib/types'
 import { calcBatchLifetimeMs, calcNextRollover } from '../lib/wallet'
@@ -59,7 +60,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const { aspInfo } = useContext(AspContext)
   const { config, updateConfig } = useContext(ConfigContext)
   const { navigate } = useContext(NavigationContext)
-  const { setNoteInfo, noteInfo, setDeepLinkInfo, deepLinkInfo } = useContext(FlowContext)
+  const { setNoteInfo, noteInfo, setDeepLinkInfo, deepLinkInfo, setKycAuthParams } = useContext(FlowContext)
   const { notifyTxSettled } = useContext(NotificationsContext)
 
   const [txs, setTxs] = useState<Tx[]>([])
@@ -116,7 +117,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         consoleError(err, 'error decoding ark note ')
       }
     }
-    window.location.hash = ''
+    // Clear deep link from URL after processing
+    clearDeepLinkFromUrl()
   }, [])
 
   useEffect(() => {
@@ -127,8 +129,11 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       navigate(Pages.NotesRedeem)
       return
     }
+    // if no deep link, don't navigate (let other effects handle default navigation)
+    if (!deepLinkInfo?.appId) return
+    
     // if app url is present, navigate to it
-    switch (deepLinkInfo?.appId) {
+    switch (deepLinkInfo.appId) {
       case 'boltz':
         navigate(Pages.AppBoltz)
         break
@@ -138,6 +143,15 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       case 'lendaswap':
         navigate(Pages.AppLendaswap)
         break
+      case 'kyc': {
+        // Handle KYC deep link: pass auth params and navigate to Verification page
+        const kycParams = deepLinkInfo.query ? parseKycDeepLink(deepLinkInfo.query) : null
+        if (kycParams) {
+          setKycAuthParams(kycParams)
+        }
+        navigate(Pages.SettingsKYC)
+        break
+      }
       default:
         navigate(Pages.Wallet)
     }

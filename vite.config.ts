@@ -14,7 +14,11 @@ export default defineConfig({
   ],
   server: {
     port: 3002,
+    // Handle SPA routing - all paths fallback to index.html
+    historyApiFallback: true,
   },
+  // In production, the web server needs to be configured to serve index.html for all routes
+  // For most static hosting (Netlify, Vercel, etc.), this is handled automatically
   build: {
     emptyOutDir: true,
     sourcemap: true,

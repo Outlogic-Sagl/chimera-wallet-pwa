@@ -31,6 +31,7 @@ import AppReferral from '../screens/Apps/Referral/Index'
 import AppGiftCards from '../screens/Apps/GiftCards/Index'
 import AppCardReservation from '../screens/Apps/CardReservation/Index'
 import Unavailable from '../screens/Wallet/Unavailable'
+import Verification from '../screens/Settings/Verification'
 
 export enum Pages {
   AppBoltz,
@@ -60,6 +61,7 @@ export enum Pages {
   SendDetails,
   SendSuccess,
   Settings,
+  SettingsKYC,
   Transaction,
   Unavailable,
   Unlock,
@@ -102,6 +104,7 @@ const pageTab = {
   [Pages.SendDetails]: Tabs.Wallet,
   [Pages.SendSuccess]: Tabs.Wallet,
   [Pages.Settings]: Tabs.Settings,
+  [Pages.SettingsKYC]: Tabs.Settings,
   [Pages.Transaction]: Tabs.Wallet,
   [Pages.Unavailable]: Tabs.None,
   [Pages.Unlock]: Tabs.None,
@@ -165,6 +168,8 @@ export const pageComponent = (page: Pages): JSX.Element => {
       return <SendSuccess />
     case Pages.Settings:
       return <Settings />
+    case Pages.SettingsKYC:
+      return <Verification />
     case Pages.Transaction:
       return <Transaction />
     case Pages.Unavailable:

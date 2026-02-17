@@ -24,14 +24,19 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "protocol_handlers": [
     {
-      "protocol": "web+arkade",
+      "protocol": "web+chimera",
       "url": "/#%s"
     }
+  ],
+  "handle_links": "preferred",
+  "scope_extensions": [
+    { "origin": "https://*.chimerawallet.com" }
   ]
 }

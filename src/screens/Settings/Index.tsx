@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import AddressBook from './AddressBook'
 import Lock from './Lock'
 import Notifications from './Notifications'
 import Backup from './Backup'
@@ -18,6 +19,8 @@ import Theme from './Theme'
 import Fiat from './Fiat'
 import Display from './Display'
 import Password from './Password'
+import Verification from './Verification'
+import KnowledgeBase from './KnowledgeBase'
 
 export default function Settings() {
   const { option } = useContext(OptionsContext)
@@ -26,9 +29,12 @@ export default function Settings() {
     <>
       {option === SettingsOptions.Menu && <SettingsMenu />}
       {option === SettingsOptions.About && <About />}
+      {option === SettingsOptions.AddressBook && <AddressBook />}
       {option === SettingsOptions.Advanced && <Advanced />}
       {option === SettingsOptions.Backup && <Backup />}
       {option === SettingsOptions.General && <General />}
+      {option === SettingsOptions.KnowledgeBase && <KnowledgeBase />}
+      {option === SettingsOptions.KYC && <Verification />}
       {option === SettingsOptions.Lock && <Lock />}
       {option === SettingsOptions.Logs && <Logs />}
       {option === SettingsOptions.Notes && <NotesForm />}

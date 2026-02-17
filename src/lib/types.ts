@@ -41,6 +41,7 @@ export type PendingSwap = PendingReverseSwap | PendingSubmarineSwap
 export type Satoshis = number
 
 export enum SettingsSections {
+  Account = 'Account',
   Advanced = 'Advanced',
   General = 'General',
   Security = 'Security',
@@ -50,9 +51,12 @@ export enum SettingsSections {
 export enum SettingsOptions {
   Menu = 'menu',
   About = 'about',
+  AddressBook = 'address book',
   Advanced = 'advanced',
   Backup = 'backup',
   General = 'general',
+  KnowledgeBase = 'knowledge base',
+  KYC = 'KYC - verification',
   Lock = 'lock wallet',
   Logs = 'logs',
   Notifications = 'notifications',
