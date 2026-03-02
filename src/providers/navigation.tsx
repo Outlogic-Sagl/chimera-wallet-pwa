@@ -32,6 +32,9 @@ import AppGiftCards from '../screens/Apps/GiftCards/Index'
 import AppCardReservation from '../screens/Apps/CardReservation/Index'
 import AppSwap from '../screens/Apps/Swap/Index'
 import AppSwapOrderDetails from '../screens/Apps/Swap/OrderDetails'
+import AppAddressBook from '../screens/Apps/AddressBook/Index'
+import AppAddressBookForm from '../screens/Apps/AddressBook/Form'
+import AppAddressBookContact from '../screens/Apps/AddressBook/ContactDetail'
 import Unavailable from '../screens/Wallet/Unavailable'
 import Verification from '../screens/Settings/Verification'
 
@@ -47,6 +50,9 @@ export enum Pages {
   AppCardReservation,
   AppSwap,
   AppSwapOrderDetails,
+  AppAddressBook,
+  AppAddressBookForm,
+  AppAddressBookContact,
   Apps,
   Init,
   InitRestore,
@@ -92,6 +98,9 @@ const pageTab = {
   [Pages.AppCardReservation]: Tabs.Apps,
   [Pages.AppSwap]: Tabs.Apps,
   [Pages.AppSwapOrderDetails]: Tabs.Apps,
+  [Pages.AppAddressBook]: Tabs.Apps,
+  [Pages.AppAddressBookForm]: Tabs.Apps,
+  [Pages.AppAddressBookContact]: Tabs.Apps,
   [Pages.Apps]: Tabs.Apps,
   [Pages.Init]: Tabs.None,
   [Pages.InitRestore]: Tabs.None,
@@ -142,6 +151,12 @@ export const pageComponent = (page: Pages): JSX.Element => {
       return <AppSwap />
     case Pages.AppSwapOrderDetails:
       return <AppSwapOrderDetails />
+    case Pages.AppAddressBook:
+      return <AppAddressBook />
+    case Pages.AppAddressBookForm:
+      return <AppAddressBookForm />
+    case Pages.AppAddressBookContact:
+      return <AppAddressBookContact />
     case Pages.Apps:
       return <Apps />
     case Pages.Init:
@@ -196,13 +211,15 @@ export const pageComponent = (page: Pages): JSX.Element => {
 }
 
 interface NavigationContextProps {
-  navigate: (arg0: Pages) => void
+  navigate: (arg0: Pages, data?: Record<string, unknown>) => void
+  navigationData?: Record<string, unknown>
   screen: Pages
   tab: Tabs
 }
 
 export const NavigationContext = createContext<NavigationContextProps>({
   navigate: () => {},
+  navigationData: undefined,
   screen: Pages.Init,
   tab: Tabs.None,
 })
@@ -210,6 +227,7 @@ export const NavigationContext = createContext<NavigationContextProps>({
 export const NavigationProvider = ({ children }: { children: ReactNode }) => {
   const [screen, setScreen] = useState(Pages.Init)
   const [tab, setTab] = useState(Tabs.None)
+  const [navigationData, setNavigationData] = useState<Record<string, unknown> | undefined>(undefined)
 
   const navigationHistory = useRef<Pages[]>([])
 
@@ -262,11 +280,12 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [pop])
 
-  const navigate = (page: Pages) => {
+  const navigate = (page: Pages, data?: Record<string, unknown>) => {
     push(page)
     setScreen(page)
     setTab(pageTab[page])
+    setNavigationData(data)
   }
 
-  return <NavigationContext.Provider value={{ navigate, screen, tab }}>{children}</NavigationContext.Provider>
+  return <NavigationContext.Provider value={{ navigate, navigationData, screen, tab }}>{children}</NavigationContext.Provider>
 }

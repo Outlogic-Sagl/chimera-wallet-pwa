@@ -13,6 +13,7 @@ import FujiMoneyIcon from '../../icons/FujiMoney'
 import LendasatIcon from './Lendasat/LendasatIcon'
 import LendaswapIcon from './Lendaswap/LendaswapIcon'
 import SwapIcon from '../../icons/Swap'
+import AddressBookIcon from '../../icons/AddressBook'
 
 const Middot = () => (
   <svg width='6' height='6' viewBox='0 0 6 6' fill='none' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'>
@@ -112,6 +113,14 @@ export default function Apps() {
               icon={<SwapIcon big />}
               desc='Swap fiat or crypto to Bitcoin'
               page={Pages.AppSwap}
+              live
+            />
+
+            <App
+              name='Address Book'
+              icon={<AddressBookIcon big />}
+              desc='Save and manage your addresses and contacts'
+              page={Pages.AppAddressBook}
               live
             />
 
