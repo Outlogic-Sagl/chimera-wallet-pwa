@@ -33,7 +33,7 @@ export default function Shadow({
 }: ShadowProps) {
   const style: React.CSSProperties = {
     backgroundColor: purple
-      ? 'var(--blue-dark)'
+      ? 'var(--blue-medium)'
       : red
         ? 'var(--red)'
         : lighter

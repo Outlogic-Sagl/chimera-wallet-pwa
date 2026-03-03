@@ -157,7 +157,7 @@ export default function Apps() {
               page={Pages.AppCardReservation}
               live
             />
-
+{/* 
             <App
               name='Boltz'
               icon={<BoltzIcon />}
@@ -165,7 +165,7 @@ export default function Apps() {
               link='https://boltz.exchange/'
               page={Pages.AppBoltz}
               live
-            />
+            /> */}
 
             <App
               name='LendaSat'
