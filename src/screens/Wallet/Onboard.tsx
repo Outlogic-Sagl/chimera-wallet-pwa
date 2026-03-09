@@ -56,7 +56,7 @@ export default function Onboard() {
       return (
         <FlexCol gap='0.5rem'>
           <Title text={title} />
-          <Text color='dark80' thin wrap>
+          <Text thin wrap>
             {text}
           </Text>
         </FlexCol>

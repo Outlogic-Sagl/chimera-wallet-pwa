@@ -33,7 +33,7 @@ export default function Button({
 }: ButtonProps) {
   const [pressed, setPressed] = useState(false)
 
-  const variant = red ? 'red' : secondary ? 'secondary' : clear ? 'clear' : outline ? 'outline' : 'dark'
+  const variant = red ? 'red' : secondary ? 'secondary' : clear ? 'clear' : outline ? 'outline' : 'primary'
   const className = `${variant}${pressed ? ' pressed' : ''}`
 
   const handlePressStart = useCallback(() => {

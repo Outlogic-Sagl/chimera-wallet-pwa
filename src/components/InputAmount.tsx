@@ -70,7 +70,7 @@ export default function InputAmount({
 
   const leftLabel = useFiat ? config.fiat : 'SATS'
   const rightLabel = `${otherValue} ${useFiat ? 'SATS' : config.fiat}`
-  const fontStyle = { color: 'var(--dark50)', fontSize: '13px' }
+  const fontStyle = { color: 'var(--white)', fontSize: '13px' }
   const bottomLeft = minimumSats ? `Min: ${prettyNumber(minimumSats)} ${minimumSats === 1 ? 'SAT' : 'SATS'}` : ''
   const bottomRight = maximumSats ? `Max: ${prettyNumber(maximumSats)} ${maximumSats === 1 ? 'SAT' : 'SATS'}` : ''
 

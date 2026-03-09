@@ -75,7 +75,7 @@ export default function AppInfoPage({ appName, slides, onContinue, onBack }: App
                 <Text bold large centered>
                   {currentSlide.title}
                 </Text>
-                <Text color='dark80' centered wrap>
+                <Text centered wrap>
                   {currentSlide.description}
                 </Text>
               </FlexCol>

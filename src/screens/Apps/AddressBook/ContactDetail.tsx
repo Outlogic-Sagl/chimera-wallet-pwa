@@ -37,7 +37,7 @@ function AddressEntry({ entry, onDelete }: AddressEntryProps) {
           <Text bold small>
             {entry.label || getAddressTypeName(entry.type)}
           </Text>
-          <Text color='dark60' tiny>
+          <Text tiny>
             {truncateAddress(entry.address)}
           </Text>
         </FlexCol>
@@ -104,7 +104,7 @@ export default function ContactDetail() {
               {/* Contact info */}
               <Shadow>
                 <FlexCol gap='0.25rem'>
-                  <Text color='dark60' tiny>
+                  <Text tiny>
                     Contact Name
                   </Text>
                   <Text bold>{contactName}</Text>
@@ -113,12 +113,12 @@ export default function ContactDetail() {
 
               {/* Addresses */}
               <FlexCol gap='0.5rem'>
-                <Text bold small color='dark80'>
+                <Text bold small>
                   Addresses ({addresses.length})
                 </Text>
                 {addresses.length === 0 ? (
                   <div style={{ padding: '1rem', textAlign: 'center' }}>
-                    <Text color='dark60'>No addresses for this contact.</Text>
+                    <Text>No addresses for this contact.</Text>
                   </div>
                 ) : (
                   addresses.map((entry) => (

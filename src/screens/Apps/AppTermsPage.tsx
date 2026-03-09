@@ -44,7 +44,7 @@ export default function AppTermsPage({ appName, terms, onAccept, onBack }: AppTe
                 }}
               >
                 <div style={{ whiteSpace: 'pre-wrap' }}>
-                  <Text color='dark80' wrap>
+                  <Text wrap>
                     {terms.content}
                   </Text>
                 </div>

@@ -24,6 +24,7 @@ import FlexCol from '../../../components/FlexCol'
 import Keyboard from '../../../components/Keyboard'
 import Text from '../../../components/Text'
 import Dropdown from '../../../components/Dropdown'
+import InfoContainer from '../../../components/InfoContainer'
 import Scanner from '../../../components/Scanner'
 import Loading from '../../../components/Loading'
 import { consoleError } from '../../../lib/logs'
@@ -441,7 +442,7 @@ export default function SendForm() {
     const pretty = useFiat ? prettyAmount(amount, config.fiat) : prettyAmount(amount)
     return (
       <div onClick={handleSendAll} style={{ cursor: 'pointer' }}>
-        <Text color='dark50' smaller>
+        <Text smaller>
           {`${pretty} available`}
         </Text>
       </div>
@@ -556,21 +557,25 @@ export default function SendForm() {
               sats={amount}
               value={textValue ? Number(textValue) : undefined}
             />
-            {methodWarningInfo ? <InfoLine color='orange' text={methodWarningInfo} /> : null}
-            {methodFeeText ? <InfoLine color='orange' text={methodFeeText} /> : null}
-            {methodTimeInfo ? <InfoLine text={methodTimeInfo} /> : null}
-            {methodFeesInfo ? <InfoLine text={methodFeesInfo} /> : null}
-            {deductFromAmount ? <InfoLine color='orange' text='Fees will be deducted from the amount sent' /> : null}
+            {Boolean(methodWarningInfo || methodFeeText || methodTimeInfo || methodFeesInfo || deductFromAmount) && (
+              <InfoContainer>
+                {methodWarningInfo ? <InfoLine compact color='orange' text={methodWarningInfo} /> : null}
+                {methodFeeText ? <InfoLine compact color='orange' text={methodFeeText} /> : null}
+                {methodTimeInfo ? <InfoLine compact text={methodTimeInfo} /> : null}
+                {methodFeesInfo ? <InfoLine compact text={methodFeesInfo} /> : null}
+                {deductFromAmount ? <InfoLine compact color='orange' text='Fees will be deducted from the amount sent' /> : null}
+              </InfoContainer>
+            )}
             {tryingToSelfSend ? (
               <div style={{ width: '100%' }}>
-                <Text centered color='dark50' small>
+                <Text centered small>
                   Did you mean <a onClick={gotoRollover}>roll over your VTXOs</a>?
                 </Text>
               </div>
             ) : null}
             {nudgeBoltz && getApiUrl() ? (
               <div style={{ width: '100%' }}>
-                <Text centered color='dark50' small>
+                <Text centered small>
                   Enable <a onClick={gotoBoltzApp}>Lightning swaps</a> to pay
                 </Text>
               </div>

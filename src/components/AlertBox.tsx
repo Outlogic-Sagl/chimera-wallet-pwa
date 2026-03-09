@@ -48,7 +48,7 @@ function AlertBox({ children, icon, onClick, onDismiss }: AlertBoxProps) {
 
 function AlertText({ children }: { children: React.ReactNode }) {
   return (
-    <Text color='black' medium smaller wrap heading>
+    <Text color='white' medium smaller wrap heading>
       {children}
     </Text>
   )
@@ -57,7 +57,7 @@ function AlertText({ children }: { children: React.ReactNode }) {
 export function InfoBox({ html }: { html: string }) {
   const sanitizedHtml = DOMPurify.sanitize(html)
   const style: React.CSSProperties = {
-    color: 'var(--black)',
+    color: 'var(--white)',
     fontSize: '13px',
     fontWeight: 600,
     lineHeight: 1.5,

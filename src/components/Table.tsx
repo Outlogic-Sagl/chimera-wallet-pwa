@@ -56,13 +56,13 @@ export default function Table({ data }: { data: TableData }) {
               ariaLabel={ariaLabel(title, value)}
             >
               <FlexRow between>
-                <FlexRow color='dark50'>
+                <FlexRow>
                   {icon}
                   <Text small thin>
                     {title}
                   </Text>
                 </FlexRow>
-                <Text color='dark' copy={value} small bold>
+                <Text copy={value} small bold>
                   {prettyLongText(value)}
                 </Text>
               </FlexRow>

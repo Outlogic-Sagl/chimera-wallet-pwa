@@ -83,7 +83,7 @@ export default function Text({
 export function TextLabel({ children }: TextProps) {
   return (
     <div style={{ padding: '0.5rem 1rem' }}>
-      <Text capitalize color='dark50' smaller>
+      <Text capitalize smaller>
         {children}
       </Text>
     </div>
@@ -92,7 +92,7 @@ export function TextLabel({ children }: TextProps) {
 
 export function TextSecondary({ centered, children }: TextProps) {
   return (
-    <Text centered={centered} color='dark50' small thin wrap>
+    <Text centered={centered} small thin wrap>
       {children}
     </Text>
   )

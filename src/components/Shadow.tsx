@@ -6,6 +6,8 @@ interface ShadowProps {
   children: ReactNode
   fat?: boolean
   flex?: boolean
+  info?: boolean
+  input?: boolean
   inverted?: boolean
   lighter?: boolean
   onClick?: () => void
@@ -22,6 +24,8 @@ export default function Shadow({
   children,
   fat,
   flex,
+  info,
+  input,
   inverted,
   lighter,
   onClick,
@@ -32,21 +36,48 @@ export default function Shadow({
   testId,
 }: ShadowProps) {
   const style: React.CSSProperties = {
-    backgroundColor: purple
-      ? 'var(--blue-medium)'
-      : red
-        ? 'var(--red)'
-        : lighter
-          ? 'var(--dark05)'
-          : inverted
-            ? 'var(--blue-primary)'
-            : 'var(--dark10)',
-    border: border ? `1px solid var(--${borderPurple ? 'purple' : 'dark10'})` : undefined,
-    borderRadius: squared ? undefined : '0.5rem',
+    backgroundColor: info
+      ? 'var(--info-container-bg)'
+      : input
+        ? 'var(--input-bg)'
+        : purple
+          ? 'var(--blue-medium)'
+          : red
+            ? 'var(--red)'
+            : lighter
+              ? 'var(--dark05)'
+              : inverted
+                ? 'var(--blue-primary)'
+                : 'var(--dark10)',
+    border: input
+      ? '1px solid var(--input-border-color)'
+      : border
+        ? `1px solid var(--${borderPurple ? 'purple' : 'dark10'})`
+        : undefined,
+    borderRadius: info
+      ? 'var(--info-container-radius)'
+      : input
+        ? 'var(--input-border-radius)'
+        : squared
+          ? undefined
+          : '0.5rem',
     color: purple ? 'white' : '',
     cursor: onClick ? 'pointer' : undefined,
-    padding: slim ? '0.25rem' : fat ? '1rem' : '0.5rem',
+    display: info ? 'flex' : input ? 'flex' : undefined,
+    flexDirection: info ? 'column' : undefined,
+    gap: info ? 'var(--info-container-gap)' : undefined,
+    minHeight: input ? 'var(--input-height)' : undefined,
+    padding: info
+      ? 'var(--info-container-padding)'
+      : slim
+        ? '0.25rem'
+        : fat
+          ? '1rem'
+          : input
+            ? '0.5rem 1rem'
+            : '0.5rem',
     width: flex ? undefined : '100%',
+    alignItems: input ? 'center' : undefined,
   }
 
   return (

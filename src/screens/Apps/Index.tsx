@@ -89,12 +89,12 @@ function App({ desc, icon, image, link, name, live, page }: AppProps) {
                 <Text bold>{name}</Text>
                 <Tag kind={live ? 'new' : 'coming soon'} />
               </FlexRow>
-              <Text color='dark80' small thin wrap>
+              <Text small thin wrap>
                 {link}
               </Text>
             </FlexCol>
           </FlexRow>
-          <Text color='dark80' small thin wrap>
+          <Text small thin wrap>
             {desc}
           </Text>
         </FlexCol>

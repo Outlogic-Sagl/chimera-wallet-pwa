@@ -243,7 +243,7 @@ export default function SwapForm({ onBack }: SwapFormProps) {
                 />
               </Shadow>
               {parseFloat(amount) > KYC_THRESHOLD_EUR ? (
-                <Text color='dark50' small>
+                <Text small>
                   Amounts over {prettyNumber(KYC_THRESHOLD_EUR)} EUR require KYC verification
                 </Text>
               ) : null}

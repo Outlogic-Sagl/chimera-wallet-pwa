@@ -32,7 +32,7 @@ export default function Paste({ data, onClick }: PasteProps) {
             </FlexRow>
           </IonCol>
           <IonCol size='5'>
-            <Text right color='dark50' smaller>
+            <Text right smaller>
               {data}
             </Text>
           </IonCol>

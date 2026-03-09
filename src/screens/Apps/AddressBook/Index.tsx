@@ -43,7 +43,7 @@ function AddressEntry({ entry, onDelete }: AddressEntryProps) {
           <Text bold small>
             {entry.label || getAddressTypeName(entry.type)}
           </Text>
-          <Text color='dark60' tiny>
+          <Text tiny>
             {truncateAddress(entry.address)}
           </Text>
         </FlexCol>
@@ -76,7 +76,7 @@ function ContactEntry({ name, addressCount, onClick, onDelete }: ContactEntryPro
           <div onClick={onClick} style={{ cursor: 'pointer', flex: 1 }}>
             <FlexCol gap='0.25rem'>
               <Text bold>{name}</Text>
-              <Text color='dark60' tiny>
+              <Text tiny>
                 {addressCount} {addressCount === 1 ? 'address' : 'addresses'}
               </Text>
             </FlexCol>
@@ -103,7 +103,7 @@ function EmptyState({ message }: { message: string }) {
   return (
     <FlexCol centered gap='1rem'>
       <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <Text color='dark60'>{message}</Text>
+        <Text>{message}</Text>
       </div>
     </FlexCol>
   )

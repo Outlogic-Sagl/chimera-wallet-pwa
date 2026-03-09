@@ -56,6 +56,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #fbfbfb;
+}
+
+* {
+  color: inherit;
+}
+
+ion-app, ion-content, ion-page, ion-text {
+  color: #fbfbfb;
+}
+
+svg {
+  color: #fbfbfb;
 }
 
 .first-letter::first-letter {

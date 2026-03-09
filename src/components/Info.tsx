@@ -29,12 +29,12 @@ export default function Info({ children, color, icon, title }: InfoProps) {
   )
 }
 
-export function InfoLine({ centered, color, text }: { centered?: boolean; color?: string; text: string }) {
+export function InfoLine({ centered, color, compact, text }: { centered?: boolean; color?: string; compact?: boolean; text: string }) {
   return (
-    <FlexCol margin='0 0 1rem 0'>
+    <FlexCol margin={compact ? '0' : '0 0 1rem 0'}>
       <FlexRow centered={centered}>
         <InfoIcon color={color ?? 'dark50'} />
-        <Text color='dark50' small wrap>
+        <Text small wrap>
           {text}
         </Text>
       </FlexRow>

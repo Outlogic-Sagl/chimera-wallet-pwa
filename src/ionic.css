@@ -1,5 +1,5 @@
 :root {
-  --black: #000627;
+  --black: #fbfbfb;
   --black-bg: #101015;
   --blue-primary: #1F3BDB;
   --blue-medium: #061A8E;
@@ -30,10 +30,41 @@
   --white: #fbfbfb;
   --yellow: #e2c542;
   --yellowoutlier: #debb20;
-  --ion-background-color: #fff;
+  --input-bg: rgba(37, 37, 42, 1);
+  --input-border-color: rgba(31, 59, 219, 0);
+  --input-border-radius: 30px;
+  --input-height: 64px;
+  --info-container-bg: rgba(37, 37, 42, 1);
+  --info-container-radius: 16px;
+  --info-container-padding: 16px;
+  --info-container-gap: 8px;
+  --ion-background-color: #101015;
   --ion-background-focused: var(--blue-primary);
-  --ion-tabbar-background-color: #fafafa;
-  --ion-backdrop-color: #fff;
+  --ion-tabbar-background-color: #181818;
+  --ion-backdrop-color: #101015;
+  --ion-text-color: #fbfbfb;
+  --ion-text-color-rgb: 251, 251, 251;
+  --ion-color-step-50: #fbfbfb;
+  --ion-color-step-100: #fbfbfb;
+  --ion-color-step-150: #fbfbfb;
+  --ion-color-step-200: #fbfbfb;
+  --ion-color-step-250: #fbfbfb;
+  --ion-color-step-300: #fbfbfb;
+  --ion-color-step-350: #fbfbfb;
+  --ion-color-step-400: #fbfbfb;
+  --ion-color-step-450: #fbfbfb;
+  --ion-color-step-500: #fbfbfb;
+  --ion-color-step-550: #fbfbfb;
+  --ion-color-step-600: #fbfbfb;
+  --ion-color-step-650: #fbfbfb;
+  --ion-color-step-700: #fbfbfb;
+  --ion-color-step-750: #fbfbfb;
+  --ion-color-step-800: #fbfbfb;
+  --ion-color-step-850: #fbfbfb;
+  --ion-color-step-900: #fbfbfb;
+  --ion-color-step-950: #fbfbfb;
+  --ion-color-dark: #fbfbfb;
+  --ion-color-dark-rgb: 251, 251, 251;
   --toggle-background: #fbfbfb;
   --danger: #a51515;
   --warning: #c3730a;
@@ -87,13 +118,16 @@
 }
 
 ion-button {
-  --border-radius: 0.5rem;
+  --background: var(--blue-primary);
+  --border-color: var(--blue-primary);
+  --color: white;
+  --border-radius: 1rem;
   --ripple-color: transparent;
   --ion-color-activated: transparent;
   --box-shadow: none;
-  --btn-shadow-color: rgba(0, 0, 0, 0.25);
+  --btn-shadow-color: #1a0b4a;
 
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   font-family: 'Geist Mono', monospace;
   font-size: 0.875rem;
   font-weight: 400;
@@ -123,7 +157,7 @@ ion-button {
   &.clear {
     --background: none;
     --border-color: none;
-    --color: var(--black);
+    --color: white;
 
     box-shadow: none;
 
@@ -133,16 +167,16 @@ ion-button {
     }
   }
   &.dark {
-    --background: var(--blue-primary);
-    --border-color: var(--blue-primary);
-    --btn-shadow-color: #1a0b4a;
+    --background: var(--blue-dark);
+    --border-color: var(--blue-dark);
+    --btn-shadow-color: #000000;
     --color: white;
   }
   &.outline {
     --background: none;
     --border-color: var(--dark50);
     --btn-shadow-color: rgba(0, 0, 0, 0.1);
-    --color: var(--dark50);
+    --color: white;
   }
   &.red {
     --background: var(--red);
@@ -152,9 +186,9 @@ ion-button {
   }
   &.secondary {
     --background: var(--dark20);
-    --border-color: var(--black);
+    --border-color: var(--dark50);
     --btn-shadow-color: rgba(0, 0, 0, 0.1);
-    --color: var(--black);
+    --color: white;
   }
   &[size='small'] {
     min-height: 16px;
@@ -175,7 +209,7 @@ ion-button {
 ion-app ion-header {
   align-items: center;
   border-bottom: 1px solid #444;
-  color: var(--ion-color-dark);
+  color: #fbfbfb;
   display: flex;
   height: 4rem;
   & ion-grid {
@@ -192,20 +226,21 @@ ion-tab-bar {
   border-top: 1px solid var(--dark20);
   width: 100%;
   & ion-tab-button {
-    --color-selected: var(--ion-color-dark);
+    --color: #fbfbfb;
+    --color-selected: #fbfbfb;
     max-width: none;
     &:hover,
     &:hover svg,
     &.tab-selected,
     &.tab-selected svg {
-      color: var(--ion-color-dark);
+      color: #fbfbfb;
     }
     & .focusable:focus {
       background-color: transparent;
     }
   }
   & svg {
-    color: var(--dark50);
+    color: rgba(251, 251, 251, 0.6);
   }
 }
 
@@ -253,9 +288,13 @@ ion-modal::part(content) {
 }
 
 ion-select {
-  --background: var(--dark20);
-  --border-radius: 0.5rem;
+  --background: var(--input-bg);
+  --border-radius: var(--input-border-radius);
+  --color: var(--white);
+  min-height: var(--input-height);
   width: 100%;
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--input-border-radius);
   &::part(container) {
     padding: 0 1rem;
   }
@@ -316,4 +355,21 @@ ion-toggle::part(track) {
 ion-input[readonly] {
   --color: var(--dark50);
   --highlight-color-focused: none;
+}
+
+ion-input {
+  --background: var(--input-bg);
+  --border-radius: var(--input-border-radius);
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --color: var(--white);
+  --placeholder-color: var(--dark50);
+  --placeholder-opacity: 1;
+  min-height: var(--input-height);
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--input-border-radius);
+}
+
+ion-input.has-focus {
+  border-color: var(--blue-primary);
 }

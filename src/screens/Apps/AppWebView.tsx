@@ -18,10 +18,10 @@ export default function AppWebView({ appName, url, onBack }: AppWebViewProps) {
         <Content>
           <Padded>
             <div style={{ height: '100%', minHeight: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-              <Text color='dark50' centered>
+              <Text centered>
                 This app is not yet available.
               </Text>
-              <Text color='dark30' small centered>
+              <Text small centered>
                 Please check back later.
               </Text>
             </div>

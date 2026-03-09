@@ -31,7 +31,7 @@ export default function Balance({ amount }: BalanceProps) {
 
   return (
     <FlexCol gap='0' margin='3rem 0 2rem 0'>
-      <Text color='dark50' smaller>
+      <Text smaller>
         My balance
       </Text>
       <FlexRow>
@@ -47,7 +47,7 @@ export default function Balance({ amount }: BalanceProps) {
       </FlexRow>
       {showBoth ? (
         <FlexRow>
-          <Text color='dark80'>{otherBalance}</Text>
+          <Text>{otherBalance}</Text>
           <Text small>{otherUnit}</Text>
         </FlexRow>
       ) : null}

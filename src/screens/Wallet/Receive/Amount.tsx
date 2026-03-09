@@ -7,6 +7,7 @@ import ErrorMessage from '../../../components/Error'
 import { getReceivingAddresses } from '../../../lib/asp'
 import { extractError } from '../../../lib/error'
 import Header from '../../../components/Header'
+import InfoContainer from '../../../components/InfoContainer'
 import InputAmount from '../../../components/InputAmount'
 import Content from '../../../components/Content'
 import FlexCol from '../../../components/FlexCol'
@@ -280,10 +281,14 @@ export default function ReceiveAmount() {
               value={textValue ? Number(textValue) : undefined}
               sats={satoshis}
             />
-            {methodWarningInfo ? <InfoLine color='orange' text={methodWarningInfo} /> : null}
-            {showLightningFees ? <InfoLine color='orange' text={lightningFeeText} /> : null}
-            {methodTimeInfo ? <InfoLine text={methodTimeInfo} /> : null}
-            {methodFeesInfo ? <InfoLine text={methodFeesInfo} /> : null}
+            {Boolean(methodWarningInfo || showLightningFees || methodTimeInfo || methodFeesInfo) && (
+              <InfoContainer>
+                {methodWarningInfo ? <InfoLine compact color='orange' text={methodWarningInfo} /> : null}
+                {showLightningFees ? <InfoLine compact color='orange' text={lightningFeeText} /> : null}
+                {methodTimeInfo ? <InfoLine compact text={methodTimeInfo} /> : null}
+                {methodFeesInfo ? <InfoLine compact text={methodFeesInfo} /> : null}
+              </InfoContainer>
+            )}
             {selectedMethod === TRANSFER_METHOD.bank ? (
               <InfoLine color='orange' text='Bank transfers are handled in Transfers' />
             ) : null}

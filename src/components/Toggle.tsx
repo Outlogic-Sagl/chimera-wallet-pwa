@@ -28,7 +28,7 @@ export default function Toggle({ checked, onClick, text, subtext, testId }: Togg
         </Focusable>
       </FlexRow>
       {subtext ? (
-        <Text color='dark50' small thin wrap>
+        <Text small thin wrap>
           {subtext}
         </Text>
       ) : null}

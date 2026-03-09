@@ -53,7 +53,7 @@ export default function InputWithScanner({
           placeholder={placeholder}
           onKeyUp={(ev) => ev.key === 'Enter' && onEnter && onEnter()}
         >
-          <IonText slot='end' style={{ color: 'var(--dark80)', cursor: 'pointer' }}>
+          <IonText slot='end' style={{ color: 'var(--white)', cursor: 'pointer' }}>
             <div onClick={openScan}>
               <ScanIcon />
             </div>

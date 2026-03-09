@@ -256,7 +256,7 @@ export default function Vtxos() {
                   {success ? <WarningBox green text='Coins renewed successfully' /> : null}
                   {listableVtxos.length > 0 ? (
                     <FlexCol gap='0.5rem'>
-                      <Text capitalize color='dark50' smaller>
+                      <Text capitalize smaller>
                         Your virtual coins with amount and expiration
                       </Text>
                       {listableVtxos.map((v: ExtendedVirtualCoin) => (
@@ -266,7 +266,7 @@ export default function Vtxos() {
                   ) : null}
                   {!hideUtxos && allUtxos.length > 0 ? (
                     <FlexCol gap='0.5rem'>
-                      <Text capitalize color='dark50' smaller>
+                      <Text capitalize smaller>
                         Your boarding utxos with amount and expiration
                       </Text>
                       {allUtxos.map((u: ExtendedCoin) => (
@@ -278,7 +278,7 @@ export default function Vtxos() {
               ) : (
                 <>
                   <FlexCol gap='0.5rem' margin='0 0 1rem 0'>
-                    <Text capitalize color='dark50' smaller>
+                    <Text capitalize smaller>
                       Next renewal
                     </Text>
                     <Box>

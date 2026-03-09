@@ -198,7 +198,7 @@ export default function SwapOrderDetails() {
                       <FlexCol gap='0.5rem'>
                         <Text bold>Send {order.from_asset} to:</Text>
                         <FlexRow between>
-                          <Text color='dark80' small wrap>
+                          <Text small wrap>
                             {depositAddress}
                           </Text>
                           <CopyButton value={depositAddress} />

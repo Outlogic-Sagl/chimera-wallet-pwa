@@ -31,10 +31,12 @@ export default function Dropdown({
   return (
     <>
       <InputContainer label={label}>
-        <FlexRow between onClick={() => setIsOpen(true)} padding='0.5rem 0.75rem'>
-          <Text color={selectedIndex >= 0 ? undefined : 'dark50'}>{displayValue}</Text>
-          <ChevronDownIcon />
-        </FlexRow>
+        <div onClick={() => setIsOpen(true)} style={{ width: '100%', cursor: 'pointer' }}>
+          <FlexRow between>
+            <Text color={selectedIndex >= 0 ? undefined : 'dark50'}>{displayValue}</Text>
+            <ChevronDownIcon />
+          </FlexRow>
+        </div>
       </InputContainer>
       <SheetModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <Text bold large>
