@@ -13,6 +13,7 @@ import { FiatContext } from '../providers/fiat'
 import PreconfirmedIcon from '../icons/Preconfirmed'
 import Focusable from './Focusable'
 import { hapticSubtle } from '../lib/haptics'
+import { ASSETS, type AssetSymbol } from '../lib/assets'
 
 const border = '1px solid var(--dark20)'
 
@@ -20,8 +21,11 @@ const TransactionLine = ({ tx, onClick }: { tx: Tx; onClick: () => void }) => {
   const { config } = useContext(ConfigContext)
   const { toFiat } = useContext(FiatContext)
 
+  // Convert satoshis to BTC
+  const btcAmount = tx.amount / Math.pow(10, ASSETS.BTC.precision)
+
   const prefix = tx.type === 'sent' ? '-' : '+'
-  const amount = `${prefix} ${config.showBalance ? prettyAmount(tx.amount) : prettyHide(tx.amount)}`
+  const amount = `${prefix} ${config.showBalance ? prettyAmount(btcAmount, ASSETS.BTC.symbol) : prettyHide(btcAmount, ASSETS.BTC.symbol)}`
   const date = tx.createdAt ? prettyDate(tx.createdAt) : tx.boardingTxid ? 'Unconfirmed' : 'Unknown'
 
   const Fiat = () => {
@@ -56,7 +60,7 @@ const TransactionLine = ({ tx, onClick }: { tx: Tx; onClick: () => void }) => {
 
   const When = () => <TextSecondary>{date}</TextSecondary>
 
-  const Sats = () => (
+  const Crypto = () => (
     <Text color={tx.type === 'received' ? (tx.preconfirmed && tx.boardingTxid ? 'orange' : 'green') : ''} thin>
       {amount}
     </Text>
@@ -84,10 +88,10 @@ const TransactionLine = ({ tx, onClick }: { tx: Tx; onClick: () => void }) => {
       {config.currencyDisplay === CurrencyDisplay.Fiat ? (
         <Fiat />
       ) : config.currencyDisplay === CurrencyDisplay.Sats ? (
-        <Sats />
+        <Crypto />
       ) : (
         <>
-          <Sats />
+          <Crypto />
           <Fiat />
         </>
       )}
@@ -104,19 +108,30 @@ const TransactionLine = ({ tx, onClick }: { tx: Tx; onClick: () => void }) => {
   )
 }
 
-export default function TransactionsList() {
+export default function TransactionsList({ filterAsset }: { filterAsset?: AssetSymbol | string }) {
   const { setTxInfo } = useContext(FlowContext)
   const { navigate } = useContext(NavigationContext)
   const { txs } = useContext(WalletContext)
 
   const [focused, setFocused] = useState(false)
 
+  // Filter transactions by asset if specified
+  // Note: Currently all transactions are BTC. When multi-asset support is added,
+  // the Tx type should include an 'asset' field for filtering.
+  const filteredTxs = filterAsset
+    ? txs.filter((tx) => {
+        // For now, assume all transactions are BTC
+        // In future: return tx.asset === filterAsset
+        return filterAsset === ASSETS.BTC.symbol
+      })
+    : txs
+
   const key = (tx: Tx, index: number) => tx.roundTxid || tx.redeemTxid || tx.boardingTxid || `tx-${index}`
 
   const focusOnFirstRow = () => {
     setFocused(true)
-    if (txs.length === 0) return
-    const id = key(txs[0], 0)
+    if (filteredTxs.length === 0) return
+    const id = key(filteredTxs[0], 0)
     const first = document.getElementById(id) as HTMLElement
     if (first) first.focus()
   }
@@ -140,10 +155,10 @@ export default function TransactionsList() {
 
   return (
     <div style={{ width: 'calc(100% + 2rem)', margin: '0 -1rem' }}>
-      <TextLabel>Transaction history</TextLabel>
+      <TextLabel>{filterAsset ? `${filterAsset} transactions` : 'Transaction history'}</TextLabel>
       <Focusable id='outer' onEnter={focusOnFirstRow} ariaLabel={ariaLabel()}>
         <div style={{ borderBottom: border }}>
-          {txs.map((tx, index) => {
+          {filteredTxs.map((tx, index) => {
             const k = key(tx, index)
             return (
               <Focusable

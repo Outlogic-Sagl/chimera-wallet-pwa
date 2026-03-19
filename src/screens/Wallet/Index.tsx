@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from 'react'
 import Balance from '../../components/Balance'
 import ErrorMessage from '../../components/Error'
 import TransactionsList from '../../components/TransactionsList'
+import AssetList from '../../components/AssetList'
+import AssetBalanceView from '../../components/AssetBalanceView'
 import { WalletContext } from '../../providers/wallet'
 import { AspContext } from '../../providers/asp'
 import Padded from '../../components/Padded'
@@ -19,6 +21,7 @@ import { InfoBox } from '../../components/AlertBox'
 import { psaMessage } from '../../lib/constants'
 import { AnnouncementContext } from '../../providers/announcements'
 import { WalletStaggerContainer, WalletStaggerChild } from '../../components/WalletLoadIn'
+import { ASSETS, type AssetSymbol } from '../../lib/assets'
 
 export default function Wallet() {
   const { aspInfo } = useContext(AspContext)
@@ -29,6 +32,7 @@ export default function Wallet() {
   const { nudge } = useContext(NudgeContext)
 
   const [error, setError] = useState(false)
+  const [selectedAsset, setSelectedAsset] = useState<AssetSymbol | null>(null)
   const shouldStagger = isInitialLoad
 
   useEffect(() => {
@@ -45,6 +49,51 @@ export default function Wallet() {
     navigate(Pages.SendForm)
   }
 
+  const handleAssetClick = (symbol: AssetSymbol) => {
+    setSelectedAsset(symbol)
+  }
+
+  const handleBackToAll = () => {
+    setSelectedAsset(null)
+  }
+
+  // Get balance for the selected asset (currently only BTC is supported)
+  const getAssetBalance = (symbol: AssetSymbol): number => {
+    // Currently all balance is BTC, so return the wallet balance only for BTC
+    if (symbol === ASSETS.BTC.symbol) {
+      const divisor = Math.pow(10, ASSETS.BTC.precision)
+      return balance / divisor
+    }
+    // Other assets return 0 for now (would come from multi-asset wallet support)
+    return 0
+  }
+
+  // Render asset detail view
+  if (selectedAsset) {
+    return (
+      <>
+        {announcement}
+        <Content>
+          <Padded>
+            <FlexCol>
+              <AssetBalanceView
+                symbol={selectedAsset}
+                balance={getAssetBalance(selectedAsset)}
+                onBack={handleBackToAll}
+              />
+              <FlexRow padding='0.5rem 0'>
+                <Button main icon={<SendIcon />} iconPosition='right' label='Send' onClick={handleSend} />
+                <Button main icon={<ReceiveIcon />} iconPosition='right' label='Receive' onClick={handleReceive} />
+              </FlexRow>
+              <TransactionsList filterAsset={selectedAsset} />
+            </FlexCol>
+          </Padded>
+        </Content>
+      </>
+    )
+  }
+
+  // Render default wallet view
   return (
     <>
       {announcement}
@@ -54,14 +103,7 @@ export default function Wallet() {
             <FlexCol>
               <FlexCol gap='0'>
                 <WalletStaggerChild animate={shouldStagger}>
-                  <img
-                src='/arkade-icon.png'
-                alt='Arkade logo'
-                style={{ width: 40, height: 40, objectFit: 'contain' }}
-              />
-                </WalletStaggerChild>
-                <WalletStaggerChild animate={shouldStagger}>
-                  <Balance amount={balance} />
+                  <Balance amount={balance} centered usdOnly />
                 </WalletStaggerChild>
                 <WalletStaggerChild animate={shouldStagger}>
                   <ErrorMessage error={error} text='Ark server unreachable' />
@@ -87,6 +129,12 @@ export default function Wallet() {
                   <TransactionsList />
                 </WalletStaggerChild>
               )}
+              <WalletStaggerChild animate={shouldStagger}>
+                <AssetList 
+                  balances={[{ symbol: ASSETS.BTC.symbol, balance: balance / Math.pow(10, ASSETS.BTC.precision) }]} 
+                  onAssetClick={handleAssetClick} 
+                />
+              </WalletStaggerChild>
             </FlexCol>
           </WalletStaggerContainer>
         </Padded>
