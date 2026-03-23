@@ -1,6 +1,7 @@
 import { IonInput, IonText } from '@ionic/react'
 import InputContainer from './InputContainer'
 import ScanIcon from '../icons/Scan'
+import AddressBookIcon from '../icons/AddressBook'
 import Clipboard from './Clipboard'
 import FlexCol from './FlexCol'
 import { useRef, useEffect } from 'react'
@@ -12,6 +13,7 @@ interface InputWithScannerProps {
   name?: string
   onChange: (arg0: any) => void
   onEnter?: () => void
+  openAddressBook?: () => void
   openScan: () => void
   placeholder?: string
   validator?: (arg0: string) => boolean
@@ -25,6 +27,7 @@ export default function InputWithScanner({
   name,
   onChange,
   onEnter,
+  openAddressBook,
   openScan,
   placeholder,
   validator,
@@ -53,7 +56,12 @@ export default function InputWithScanner({
           placeholder={placeholder}
           onKeyUp={(ev) => ev.key === 'Enter' && onEnter && onEnter()}
         >
-          <IonText slot='end' style={{ color: 'var(--white)', cursor: 'pointer' }}>
+          <IonText slot='end' style={{ color: 'var(--white)', cursor: 'pointer', display: 'flex', gap: '12px', alignItems: 'center' }}>
+            {openAddressBook ? (
+              <div onClick={openAddressBook}>
+                <AddressBookIcon />
+              </div>
+            ) : null}
             <div onClick={openScan}>
               <ScanIcon />
             </div>

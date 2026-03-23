@@ -44,19 +44,35 @@ video {
 
 /* end of tailwindcss/base */
 
+html {
+  background-color: #101015;
+  /* Ensure background extends to safe areas on iOS */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
 html,
 body,
 #root {
   height: 100%;
 }
+
 body {
   margin: 0;
+  background-color: #101015;
   font-family:
     'Geist', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #fbfbfb;
+  /* Prevent white background on iOS Safari */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+#root {
+  background-color: #101015;
 }
 
 * {
@@ -65,6 +81,11 @@ body {
 
 ion-app, ion-content, ion-page, ion-text {
   color: #fbfbfb;
+  background: transparent;
+}
+
+ion-app {
+  background-color: #101015;
 }
 
 svg {

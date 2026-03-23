@@ -117,6 +117,8 @@
   border-top: var(--dark50) 1px solid;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
+  /* Handle iOS safe area */
+  padding-bottom: env(safe-area-inset-bottom);
   & .action-sheet-title {
     font-size: 1rem;
     font-weight: 700;
@@ -241,6 +243,9 @@ ion-app ion-header {
 ion-tab-bar {
   border-top: 1px solid var(--dark20);
   width: 100%;
+  background-color: var(--ion-tabbar-background-color);
+  /* Handle iOS safe area */
+  padding-bottom: env(safe-area-inset-bottom);
   & ion-tab-button {
     --color: var(--grey);
     --color-selected: var(--green);
@@ -392,4 +397,24 @@ ion-input {
 
 ion-input.has-focus {
   border-color: var(--blue-primary);
+}
+
+/* iOS Safari specific fixes */
+ion-backdrop {
+  background-color: var(--ion-backdrop-color);
+}
+
+/* Ensure modals and sheets extend to safe areas on iOS */
+ion-modal,
+ion-action-sheet {
+  --background: var(--ion-background-color);
+}
+
+/* Prevent white backgrounds in iOS Safari */
+ion-content::part(background) {
+  background: var(--ion-background-color);
+}
+
+ion-page {
+  background: var(--ion-background-color);
 }

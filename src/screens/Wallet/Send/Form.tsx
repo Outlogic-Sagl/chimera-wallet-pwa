@@ -23,7 +23,6 @@ import Content from '../../../components/Content'
 import FlexCol from '../../../components/FlexCol'
 import Keyboard from '../../../components/Keyboard'
 import Text from '../../../components/Text'
-import Dropdown from '../../../components/Dropdown'
 import InfoContainer from '../../../components/InfoContainer'
 import Scanner from '../../../components/Scanner'
 import Loading from '../../../components/Loading'
@@ -43,10 +42,16 @@ import { LightningContext } from '../../../providers/lightning'
 import { decodeBip21, isBip21 } from '../../../lib/bip21'
 import { FeesContext } from '../../../providers/fees'
 import { InfoLine } from '../../../components/Info'
+import NetworkSelector from '../../../components/NetworkSelector'
+import { getNetworkConfig } from '../../../lib/networks'
+import { ASSETS, ASSET_LIST, type AssetSymbol } from '../../../lib/assets'
+import AssetIcon from '../../../icons/AssetIcon'
+import SelectSheet from '../../../components/SelectSheet'
+import ChevronDown from '../../../icons/ChevronDown'
+import WhenIcon from '../../../icons/When'
+import FeesIcon from '../../../icons/Fees'
 import {
   TRANSFER_METHOD,
-  TRANSFER_METHOD_LABELS,
-  TRANSFER_METHOD_OPTIONS,
   SEND_METHOD_FEES_TEXT,
   SEND_METHOD_TIME_TEXT,
   SEND_METHOD_WARNING_TEXT,
@@ -81,6 +86,8 @@ export default function SendForm() {
   const [scan, setScan] = useState(false)
   const [textValue, setTextValue] = useState('')
   const [tryingToSelfSend, setTryingToSelfSend] = useState(false)
+  const [assetSheetOpen, setAssetSheetOpen] = useState(false)
+  const [selectedAsset, setSelectedAsset] = useState<AssetSymbol>('BTC')
 
   const selectedMethod: TransferMethod = sendInfo.method ?? TRANSFER_METHOD.bitcoin
 
@@ -497,15 +504,63 @@ export default function SendForm() {
         <Padded>
           <FlexCol gap='2rem'>
             <ErrorMessage error={Boolean(error)} text={error} />
-            <Dropdown
-              label='Transfer method'
-              labels={TRANSFER_METHOD_OPTIONS.map((option) => TRANSFER_METHOD_LABELS[option])}
-              onChange={(value) => {
-                const method = value as TransferMethod
+            {/* Amount Display Section */}
+            <div style={{ textAlign: 'center', width: '100%', marginTop: '1rem' }}>
+              {/* Large tappable amount */}
+              <div
+                onClick={() => {
+                  if (!amountIsReadOnly) {
+                    setKeys(true)
+                  }
+                }}
+                style={{
+                  cursor: amountIsReadOnly ? 'default' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                }}
+              >
+                <span style={{ fontSize: '2.5rem', fontWeight: 700, color: 'white', fontFamily: 'monospace' }}>
+                  {prettyNumber((amount || 0) / Math.pow(10, ASSETS[selectedAsset].precision), 8)}
+                </span>
+                <span style={{ fontSize: '1.25rem', fontWeight: 600, color: 'white' }}>
+                  {ASSETS[selectedAsset].symbol}
+                </span>
+              </div>
+              {/* Fiat equivalent */}
+              <div style={{ fontSize: '1rem', color: 'var(--white50)', marginTop: '0.25rem' }}>
+                {prettyNumber(toFiat(amount || 0), 2)} {config.fiat}
+              </div>
+              {/* Asset selector dropdown */}
+              <div
+                onClick={() => setAssetSheetOpen(true)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginTop: '1rem',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '2rem',
+                  backgroundColor: 'var(--white05)',
+                  cursor: 'pointer',
+                }}
+              >
+                <AssetIcon symbol={selectedAsset} size={20} />
+                <span style={{ color: 'white', fontSize: '0.875rem' }}>
+                  {ASSETS[selectedAsset].name} - {prettyNumber(availableBalance / Math.pow(10, ASSETS[selectedAsset].precision), 8)} {ASSETS[selectedAsset].symbol}
+                </span>
+                <ChevronDown />
+              </div>
+            </div>
+            <NetworkSelector
+              label='Network'
+              selected={selectedMethod}
+              onSelect={(network) => {
                 setRecipient('')
                 setState({
                   ...sendInfo,
-                  method,
+                  method: network,
                   address: '',
                   arkAddress: '',
                   invoice: '',
@@ -514,55 +569,31 @@ export default function SendForm() {
                   recipient: '',
                 })
               }}
-              options={TRANSFER_METHOD_OPTIONS}
-              selected={selectedMethod}
             />
             {selectedMethod !== TRANSFER_METHOD.bank ? (
               <InputAddress
-              name='send-address'
-              focus={focus === 'recipient'}
-              label='Recipient address'
-              placeholder={
-                selectedMethod === TRANSFER_METHOD.ark
-                  ? 'Ark address'
-                  : selectedMethod === TRANSFER_METHOD.lightning
-                    ? 'Lightning invoice or LNURL'
-                    : selectedMethod === TRANSFER_METHOD.bitcoin
-                      ? 'Bitcoin address'
-                        : 'Bitcoin address'
-              }
-              onChange={handleRecipientChange}
-              onEnter={handleEnter}
-              openScan={() => {
-                setKeys(false)
-                setScan(true)
-              }}
-              value={recipient}
+                name='send-address'
+                focus={focus === 'recipient'}
+                label='Recipient address'
+                placeholder={getNetworkConfig(selectedMethod)?.addressPlaceholder || 'Paste address'}
+                onChange={handleRecipientChange}
+                onEnter={handleEnter}
+                openAddressBook={() => navigate(Pages.AppAddressBook)}
+                openScan={() => {
+                  setKeys(false)
+                  setScan(true)
+                }}
+                value={recipient}
               />
             ) : (
               <InfoLine color='orange' text='Bank transfers are handled in Transfers' />
             )}
-            <InputAmount
-              name='send-amount'
-              focus={focus === 'amount' && !isMobileBrowser}
-              label='Amount'
-              min={lnUrlLimits.min}
-              max={lnUrlLimits.max}
-              onSats={handleAmountChange}
-              onEnter={handleEnter}
-              onFocus={handleFocus}
-              onMax={handleSendAll}
-              readOnly={amountIsReadOnly || isMobileBrowser}
-              right={<Available />}
-              sats={amount}
-              value={textValue ? Number(textValue) : undefined}
-            />
             {Boolean(methodWarningInfo || methodFeeText || methodTimeInfo || methodFeesInfo || deductFromAmount) && (
               <InfoContainer>
                 {methodWarningInfo ? <InfoLine compact color='orange' text={methodWarningInfo} /> : null}
-                {methodFeeText ? <InfoLine compact color='orange' text={methodFeeText} /> : null}
-                {methodTimeInfo ? <InfoLine compact text={methodTimeInfo} /> : null}
-                {methodFeesInfo ? <InfoLine compact text={methodFeesInfo} /> : null}
+                {methodFeeText ? <InfoLine compact color='orange' icon={<FeesIcon />} text={methodFeeText} /> : null}
+                {methodTimeInfo ? <InfoLine compact icon={<WhenIcon />} text={methodTimeInfo} /> : null}
+                {methodFeesInfo ? <InfoLine compact icon={<FeesIcon />} text={methodFeesInfo} /> : null}
                 {deductFromAmount ? <InfoLine compact color='orange' text='Fees will be deducted from the amount sent' /> : null}
               </InfoContainer>
             )}
@@ -586,6 +617,19 @@ export default function SendForm() {
       <ButtonsOnBottom>
         <Button onClick={handleContinue} label={label} disabled={buttonDisabled} />
       </ButtonsOnBottom>
+      <SelectSheet
+        isOpen={assetSheetOpen}
+        onClose={() => setAssetSheetOpen(false)}
+        onSelect={(id) => setSelectedAsset(id as AssetSymbol)}
+        options={ASSET_LIST.map((asset) => ({
+          id: asset.symbol,
+          label: asset.name,
+          description: asset.symbol,
+          icon: <AssetIcon symbol={asset.symbol} size={32} />,
+        }))}
+        selected={selectedAsset}
+        title="Select Asset"
+      />
     </>
   )
 }

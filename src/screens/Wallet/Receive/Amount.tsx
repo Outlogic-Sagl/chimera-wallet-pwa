@@ -1,55 +1,50 @@
 import { useContext, useEffect, useState } from 'react'
 import Button from '../../../components/Button'
 import ButtonsOnBottom from '../../../components/ButtonsOnBottom'
-import { FlowContext, TransferMethod } from '../../../providers/flow'
+import { FlowContext } from '../../../providers/flow'
 import Padded from '../../../components/Padded'
 import ErrorMessage from '../../../components/Error'
 import { getReceivingAddresses } from '../../../lib/asp'
 import { extractError } from '../../../lib/error'
 import Header from '../../../components/Header'
 import InfoContainer from '../../../components/InfoContainer'
-import InputAmount from '../../../components/InputAmount'
 import Content from '../../../components/Content'
 import FlexCol from '../../../components/FlexCol'
-import Keyboard from '../../../components/Keyboard'
 import { WalletContext } from '../../../providers/wallet'
 import { callFaucet, pingFaucet } from '../../../lib/faucet'
 import Loading from '../../../components/Loading'
-import { prettyAmount, prettyNumber } from '../../../lib/format'
+import { prettyAmount } from '../../../lib/format'
 import Success from '../../../components/Success'
 import { consoleError } from '../../../lib/logs'
 import { AspContext } from '../../../providers/asp'
-import { isMobileBrowser } from '../../../lib/browser'
-import { ConfigContext } from '../../../providers/config'
-import { FiatContext } from '../../../providers/fiat'
 import { LimitsContext } from '../../../providers/limits'
 import { LightningContext } from '../../../providers/lightning'
 import { InfoLine } from '../../../components/Info'
-import Dropdown from '../../../components/Dropdown'
 import QrCode from '../../../components/QrCode'
 import ExpandAddresses from '../../../components/ExpandAddresses'
 import { canBrowserShareData, shareData } from '../../../lib/share'
 import { NotificationsContext } from '../../../providers/notifications'
 import { encodeBip21 } from '../../../lib/bip21'
+import NetworkSelector from '../../../components/NetworkSelector'
+import SelectSheet from '../../../components/SelectSheet'
+import AssetIcon from '../../../icons/AssetIcon'
+import { ASSETS, ASSET_LIST, type AssetSymbol } from '../../../lib/assets'
+import ChevronDown from '../../../icons/ChevronDown'
+import WhenIcon from '../../../icons/When'
+import FeesIcon from '../../../icons/Fees'
 import {
   RECEIVE_METHOD_FEES_TEXT,
   RECEIVE_METHOD_TIME_TEXT,
   RECEIVE_METHOD_WARNING_TEXT,
   TRANSFER_METHOD,
-  TRANSFER_METHOD_LABELS,
-  TRANSFER_METHOD_OPTIONS,
 } from '../../../lib/transferMethods'
 
 export default function ReceiveAmount() {
   const { aspInfo } = useContext(AspContext)
-  const { config, useFiat } = useContext(ConfigContext)
-  const { toFiat } = useContext(FiatContext)
   const { recvInfo, setRecvInfo } = useContext(FlowContext)
   const { notifyPaymentReceived } = useContext(NotificationsContext)
   const { arkadeLightning, createReverseSwap, calcReverseSwapFee } = useContext(LightningContext)
   const {
-    amountIsAboveMaxLimit,
-    amountIsBelowMinLimit,
     validLnSwap,
     validUtxoTx,
     validVtxoTx,
@@ -62,14 +57,14 @@ export default function ReceiveAmount() {
   const [fauceting, setFauceting] = useState(false)
   const [faucetSuccess, setFaucetSuccess] = useState(false)
   const [faucetAvailable, setFaucetAvailable] = useState(false)
-  const [satoshis, setSatoshis] = useState(0)
-  const [showKeys, setShowKeys] = useState(false)
+  const [satoshis, setSatoshis] = useState(0) // No amount input, always 0 for flexible QR codes
   const [sharing, setSharing] = useState(false)
-  const [textValue, setTextValue] = useState('')
   const [invoice, setInvoice] = useState(recvInfo.invoice ?? '')
   const [qrValue, setQrValue] = useState('')
   const [bip21uri, setBip21uri] = useState('')
   const [showQrCode, setShowQrCode] = useState(false)
+  const [assetSheetOpen, setAssetSheetOpen] = useState(false)
+  const [selectedAsset, setSelectedAsset] = useState<AssetSymbol>('BTC')
 
   const selectedMethod = recvInfo.method ?? TRANSFER_METHOD.bitcoin
 
@@ -105,14 +100,6 @@ export default function ReceiveAmount() {
 
   if (!svcWallet) return <Loading text='Loading...' />
 
-  const handleChange = (sats: number) => {
-    setSatoshis(sats)
-    const value = useFiat ? toFiat(sats) : sats
-    const maximumFractionDigits = useFiat ? 2 : 0
-    setTextValue(prettyNumber(value, maximumFractionDigits, false))
-    setRecvInfo({ ...recvInfo, satoshis: sats })
-  }
-
   const handleFaucet = async () => {
     try {
       if (!satoshis) throw 'Invalid amount'
@@ -126,10 +113,6 @@ export default function ReceiveAmount() {
       setError(extractError(err))
       setFauceting(false)
     }
-  }
-
-  const handleFocus = () => {
-    if (isMobileBrowser) setShowKeys(true)
   }
 
   // manage all possible receive methods
@@ -226,10 +209,6 @@ export default function ReceiveAmount() {
       .finally(() => setSharing(false))
   }
 
-  if (showKeys) {
-    return <Keyboard back={() => setShowKeys(false)} hideBalance onSats={handleChange} value={satoshis} />
-  }
-
   if (fauceting) {
     return (
       <>
@@ -242,7 +221,7 @@ export default function ReceiveAmount() {
   }
 
   if (faucetSuccess) {
-    const displayAmount = useFiat ? prettyAmount(toFiat(satoshis), config.fiat) : prettyAmount(satoshis ?? 0)
+    const displayAmount = prettyAmount(satoshis ?? 0)
     return (
       <>
         <Header text='Success' />
@@ -253,10 +232,6 @@ export default function ReceiveAmount() {
     )
   }
 
-  if (showKeys) {
-    return <Keyboard back={() => setShowKeys(false)} hideBalance onSats={handleChange} value={satoshis} />
-  }
-
   return (
     <>
       <Header text='Receive' back />
@@ -264,29 +239,43 @@ export default function ReceiveAmount() {
         <Padded>
           <FlexCol>
             <ErrorMessage error={Boolean(error)} text={error} />
-            <Dropdown
-              label='Transfer method'
-              labels={TRANSFER_METHOD_OPTIONS.map((option) => TRANSFER_METHOD_LABELS[option])}
-              onChange={(value) => setRecvInfo({ ...recvInfo, method: value as TransferMethod, invoice: undefined })}
-              options={TRANSFER_METHOD_OPTIONS}
+            {/* Full-width Asset Selector */}
+            <div
+              onClick={() => setAssetSheetOpen(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem',
+                borderRadius: '12px',
+                backgroundColor: 'var(--white05)',
+                cursor: 'pointer',
+                border: '1px solid var(--white10)',
+                width: '100%',
+              }}
+            >
+              <AssetIcon symbol={selectedAsset} size={32} />
+              <div style={{ flex: 1 }}>
+                <div style={{ color: 'white', fontSize: '1rem', fontWeight: 600 }}>
+                  {ASSETS[selectedAsset].name}
+                </div>
+                <div style={{ color: 'var(--white50)', fontSize: '0.875rem' }}>
+                  {ASSETS[selectedAsset].symbol}
+                </div>
+              </div>
+              <ChevronDown />
+            </div>
+            <NetworkSelector
+              label='Network'
               selected={selectedMethod}
-            />
-            <InputAmount
-              name='receive-amount'
-              focus={!isMobileBrowser}
-              label='Amount'
-              onSats={handleChange}
-              onFocus={handleFocus}
-              readOnly={isMobileBrowser}
-              value={textValue ? Number(textValue) : undefined}
-              sats={satoshis}
+              onSelect={(network) => setRecvInfo({ ...recvInfo, method: network, invoice: undefined })}
             />
             {Boolean(methodWarningInfo || showLightningFees || methodTimeInfo || methodFeesInfo) && (
               <InfoContainer>
                 {methodWarningInfo ? <InfoLine compact color='orange' text={methodWarningInfo} /> : null}
-                {showLightningFees ? <InfoLine compact color='orange' text={lightningFeeText} /> : null}
-                {methodTimeInfo ? <InfoLine compact text={methodTimeInfo} /> : null}
-                {methodFeesInfo ? <InfoLine compact text={methodFeesInfo} /> : null}
+                {showLightningFees ? <InfoLine compact color='orange' icon={<FeesIcon />} text={lightningFeeText} /> : null}
+                {methodTimeInfo ? <InfoLine compact icon={<WhenIcon />} text={methodTimeInfo} /> : null}
+                {methodFeesInfo ? <InfoLine compact icon={<FeesIcon />} text={methodFeesInfo} /> : null}
               </InfoContainer>
             )}
             {selectedMethod === TRANSFER_METHOD.bank ? (
@@ -318,6 +307,19 @@ export default function ReceiveAmount() {
         {selectedMethod !== TRANSFER_METHOD.bank ? <Button label='Share' onClick={handleShare} disabled={disabled} /> : null}
         {showFaucetButton ? <Button disabled={!satoshis} label='Faucet' onClick={handleFaucet} secondary /> : null}
       </ButtonsOnBottom>
+      <SelectSheet
+        isOpen={assetSheetOpen}
+        onClose={() => setAssetSheetOpen(false)}
+        onSelect={(id) => setSelectedAsset(id as AssetSymbol)}
+        options={ASSET_LIST.map((asset) => ({
+          id: asset.symbol,
+          label: asset.name,
+          description: asset.symbol,
+          icon: <AssetIcon symbol={asset.symbol} size={32} />,
+        }))}
+        selected={selectedAsset}
+        title="Select Asset"
+      />
     </>
   )
 }

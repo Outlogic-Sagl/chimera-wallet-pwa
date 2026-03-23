@@ -15,6 +15,7 @@ interface InputAddressProps {
   name?: string
   onChange: (arg0: any) => void
   onEnter?: () => void
+  openAddressBook?: () => void
   openScan: () => void
   placeholder?: string
   value?: string
@@ -27,6 +28,7 @@ export default function InputAddress({
   name,
   onChange,
   onEnter,
+  openAddressBook,
   openScan,
   placeholder,
   value,
@@ -51,6 +53,7 @@ export default function InputAddress({
       name={name}
       onChange={onChange}
       onEnter={onEnter}
+      openAddressBook={openAddressBook}
       openScan={openScan}
       placeholder={placeholder}
       validator={validator ?? isAddress}
