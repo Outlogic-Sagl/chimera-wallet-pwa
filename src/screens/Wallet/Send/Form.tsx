@@ -578,7 +578,7 @@ export default function SendForm() {
                 placeholder={getNetworkConfig(selectedMethod)?.addressPlaceholder || 'Paste address'}
                 onChange={handleRecipientChange}
                 onEnter={handleEnter}
-                openAddressBook={() => navigate(Pages.AppAddressBook)}
+                openAddressBook={() => navigate(Pages.AppAddressBook, { selectionMode: true, returnTo: Pages.SendForm })}
                 openScan={() => {
                   setKeys(false)
                   setScan(true)

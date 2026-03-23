@@ -1,5 +1,6 @@
 import { useContext, useState, useMemo } from 'react'
 import { NavigationContext, Pages } from '../../../providers/navigation'
+import { FlowContext } from '../../../providers/flow'
 import Content from '../../../components/Content'
 import FlexCol from '../../../components/FlexCol'
 import FlexRow from '../../../components/FlexRow'
@@ -22,9 +23,11 @@ import {
 interface AddressEntryProps {
   entry: AddressBookEntry
   onDelete: (id: string) => void
+  onSelect?: (address: string) => void
+  selectionMode?: boolean
 }
 
-function AddressEntry({ entry, onDelete }: AddressEntryProps) {
+function AddressEntry({ entry, onDelete, onSelect, selectionMode }: AddressEntryProps) {
   const truncateAddress = (addr: string) => {
     if (addr.length <= 20) return addr
     return `${addr.slice(0, 10)}...${addr.slice(-10)}`
@@ -33,37 +36,61 @@ function AddressEntry({ entry, onDelete }: AddressEntryProps) {
   return (
     <Shadow>
       <FlexRow between>
-        <FlexCol gap='0.25rem'>
-          <Text bold small>
-            {entry.label || getAddressTypeName(entry.type)}
-          </Text>
-          <Text tiny>
-            {truncateAddress(entry.address)}
-          </Text>
-        </FlexCol>
-        <Focusable onEnter={() => onDelete(entry.id)} fit round>
-          <div
-            onClick={() => onDelete(entry.id)}
-            style={{ cursor: 'pointer', padding: '0.5rem' }}
-            aria-label='Delete address'
+        <Focusable onEnter={() => selectionMode && onSelect ? onSelect(entry.address) : undefined}>
+          <div 
+            onClick={() => selectionMode && onSelect ? onSelect(entry.address) : undefined}
+            style={{ 
+              cursor: selectionMode ? 'pointer' : 'default',
+              flex: 1,
+              padding: '0.5rem 0',
+            }}
           >
-            <TrashIcon />
+            <FlexCol gap='0.25rem'>
+              <Text bold small>
+                {entry.label || getAddressTypeName(entry.type)}
+              </Text>
+              <Text tiny>
+                {truncateAddress(entry.address)}
+              </Text>
+            </FlexCol>
           </div>
         </Focusable>
+        {!selectionMode && (
+          <Focusable onEnter={() => onDelete(entry.id)} fit round>
+            <div
+              onClick={() => onDelete(entry.id)}
+              style={{ cursor: 'pointer', padding: '0.5rem' }}
+              aria-label='Delete address'
+            >
+              <TrashIcon />
+            </div>
+          </Focusable>
+        )}
       </FlexRow>
     </Shadow>
   )
 }
 
 export default function ContactDetail() {
-  const { navigate, navigationData } = useContext(NavigationContext)
+  const { navigate, navigationData, goBack } = useContext(NavigationContext)
+  const { sendInfo, setSendInfo } = useContext(FlowContext)
   const contactName = (navigationData?.contactName as string) || 'Unknown'
+  const selectionMode = navigationData?.selectionMode === true
+  const returnTo = navigationData?.returnTo as Pages | undefined
   const [refreshKey, setRefreshKey] = useState(0)
 
   const addresses = useMemo(() => getContactAddresses(contactName), [contactName, refreshKey])
 
+  const handleSelectAddress = (address: string) => {
+    // Update sendInfo with the selected address
+    setSendInfo({ ...sendInfo, address, recipient: address })
+    
+    // Use goBack to avoid duplicate entries in navigation stack
+    goBack()
+  }
+
   const handleBack = () => {
-    navigate(Pages.AppAddressBook)
+    navigate(Pages.AppAddressBook, selectionMode ? { selectionMode, returnTo } : undefined)
   }
 
   const handleAddAddress = () => {
@@ -91,11 +118,11 @@ export default function ContactDetail() {
   return (
     <>
       <Header
-        text={contactName}
+        text={selectionMode ? `Select from ${contactName}` : contactName}
         back={handleBack}
-        auxFunc={handleAddAddress}
-        auxIcon={<AddIcon />}
-        auxAriaLabel='Add new address for contact'
+        auxFunc={selectionMode ? undefined : handleAddAddress}
+        auxIcon={selectionMode ? undefined : <AddIcon />}
+        auxAriaLabel={selectionMode ? undefined : 'Add new address for contact'}
       />
       <Content>
         <Padded>
@@ -122,17 +149,25 @@ export default function ContactDetail() {
                   </div>
                 ) : (
                   addresses.map((entry) => (
-                    <AddressEntry key={entry.id} entry={entry} onDelete={handleDeleteAddress} />
+                    <AddressEntry 
+                      key={entry.id} 
+                      entry={entry} 
+                      onDelete={handleDeleteAddress}
+                      onSelect={handleSelectAddress}
+                      selectionMode={selectionMode}
+                    />
                   ))
                 )}
               </FlexCol>
             </FlexCol>
 
             {/* Bottom buttons */}
-            <FlexCol gap='0.5rem' margin='1rem 0 0 0'>
-              <Button onClick={handleAddAddress} label='Add Address' />
-              <Button onClick={handleDeleteContact} label='Delete Contact' red />
-            </FlexCol>
+            {!selectionMode && (
+              <FlexCol gap='0.5rem' margin='1rem 0 0 0'>
+                <Button onClick={handleAddAddress} label='Add Address' />
+                <Button onClick={handleDeleteContact} label='Delete Contact' red />
+              </FlexCol>
+            )}
           </FlexCol>
         </Padded>
       </Content>

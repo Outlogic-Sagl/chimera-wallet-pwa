@@ -32,8 +32,8 @@ export default function TabSelector({ options, selected, onChange }: TabSelector
     textAlign: 'center',
     cursor: 'pointer',
     borderRadius: '0.25rem',
-    backgroundColor: active ? 'var(--blue-primary)' : 'transparent',
-    color: active ? 'var(--white)' : 'var(--dark80)',
+    backgroundColor: active ? 'var(--blue-primary)' : 'var(--dark80)',
+    color: active ? 'var(--white)' : 'var(--white)',
     fontWeight: active ? 600 : 400,
     transition: 'all 0.2s ease',
   })

@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useMemo } from 'react'
 import { NavigationContext, Pages } from '../../../providers/navigation'
+import { FlowContext } from '../../../providers/flow'
 import Content from '../../../components/Content'
 import FlexCol from '../../../components/FlexCol'
 import FlexRow from '../../../components/FlexRow'
@@ -28,9 +29,11 @@ type TabType = 'myaccounts' | 'contacts'
 interface AddressEntryProps {
   entry: AddressBookEntry
   onDelete: (id: string) => void
+  onSelect?: (address: string) => void
+  selectionMode?: boolean
 }
 
-function AddressEntry({ entry, onDelete }: AddressEntryProps) {
+function AddressEntry({ entry, onDelete, onSelect, selectionMode }: AddressEntryProps) {
   const truncateAddress = (addr: string) => {
     if (addr.length <= 20) return addr
     return `${addr.slice(0, 10)}...${addr.slice(-10)}`
@@ -39,23 +42,36 @@ function AddressEntry({ entry, onDelete }: AddressEntryProps) {
   return (
     <Shadow>
       <FlexRow between>
-        <FlexCol gap='0.25rem'>
-          <Text bold small>
-            {entry.label || getAddressTypeName(entry.type)}
-          </Text>
-          <Text tiny>
-            {truncateAddress(entry.address)}
-          </Text>
-        </FlexCol>
-        <Focusable onEnter={() => onDelete(entry.id)} fit round>
-          <div
-            onClick={() => onDelete(entry.id)}
-            style={{ cursor: 'pointer', padding: '0.5rem' }}
-            aria-label='Delete address'
+        <Focusable onEnter={() => selectionMode && onSelect ? onSelect(entry.address) : undefined}>
+          <div 
+            onClick={() => selectionMode && onSelect ? onSelect(entry.address) : undefined}
+            style={{ 
+              cursor: selectionMode ? 'pointer' : 'default',
+              flex: 1,
+              padding: '0.5rem 0',
+            }}
           >
-            <TrashIcon />
+            <FlexCol gap='0.25rem'>
+              <Text bold small>
+                {entry.label || getAddressTypeName(entry.type)}
+              </Text>
+              <Text tiny>
+                {truncateAddress(entry.address)}
+              </Text>
+            </FlexCol>
           </div>
         </Focusable>
+        {!selectionMode && (
+          <Focusable onEnter={() => onDelete(entry.id)} fit round>
+            <div
+              onClick={() => onDelete(entry.id)}
+              style={{ cursor: 'pointer', padding: '0.5rem' }}
+              aria-label='Delete address'
+            >
+              <TrashIcon />
+            </div>
+          </Focusable>
+        )}
       </FlexRow>
     </Shadow>
   )
@@ -110,16 +126,33 @@ function EmptyState({ message }: { message: string }) {
 }
 
 export default function AppAddressBook() {
-  const { navigate } = useContext(NavigationContext)
+  const { navigate, navigationData, goBack } = useContext(NavigationContext)
+  const { sendInfo, setSendInfo } = useContext(FlowContext)
   const [currentTab, setCurrentTab] = useState<TabType>('myaccounts')
   const [refreshKey, setRefreshKey] = useState(0)
+  
+  const selectionMode = navigationData?.selectionMode === true
+  const returnTo = navigationData?.returnTo as Pages | undefined
 
   const myAccounts = useMemo(() => getMyAccounts(), [refreshKey])
   const contacts = useMemo(() => getContacts(), [refreshKey])
   const addressBook = useMemo(() => getAddressBook(), [refreshKey])
 
+  const handleSelectAddress = (address: string) => {
+    // Update sendInfo with the selected address
+    setSendInfo({ ...sendInfo, address, recipient: address })
+    
+    // Use goBack to avoid duplicate entries in navigation stack
+    goBack()
+  }
+
   const handleBack = () => {
-    navigate(Pages.Apps)
+    if (selectionMode) {
+      // Use goBack to avoid duplicate entries in navigation stack
+      goBack()
+    } else {
+      navigate(Pages.Apps)
+    }
   }
 
   const handleAddNew = () => {
@@ -141,7 +174,11 @@ export default function AppAddressBook() {
   }
 
   const handleViewContact = (name: string) => {
-    navigate(Pages.AppAddressBookContact, { contactName: name })
+    navigate(Pages.AppAddressBookContact, { 
+      contactName: name,
+      selectionMode,
+      returnTo 
+    })
   }
 
   const getContactAddressCount = (name: string): number => {
@@ -151,11 +188,11 @@ export default function AppAddressBook() {
   return (
     <>
       <Header
-        text='Address Book'
+        text={selectionMode ? 'Select Address' : 'Address Book'}
         back={handleBack}
-        auxFunc={handleAddNew}
-        auxIcon={<AddIcon />}
-        auxAriaLabel='Add new address'
+        auxFunc={selectionMode ? undefined : handleAddNew}
+        auxIcon={selectionMode ? undefined : <AddIcon />}
+        auxAriaLabel={selectionMode ? undefined : 'Add new address'}
       />
       <Content>
         <Padded>
@@ -178,7 +215,13 @@ export default function AppAddressBook() {
                     <EmptyState message='No saved accounts yet. Add your addresses to easily access them later.' />
                   ) : (
                     myAccounts.map((entry) => (
-                      <AddressEntry key={entry.id} entry={entry} onDelete={handleDeleteAddress} />
+                      <AddressEntry 
+                        key={entry.id} 
+                        entry={entry} 
+                        onDelete={handleDeleteAddress}
+                        onSelect={handleSelectAddress}
+                        selectionMode={selectionMode}
+                      />
                     ))
                   )}
                 </FlexCol>
@@ -204,12 +247,14 @@ export default function AppAddressBook() {
             </FlexCol>
 
             {/* Bottom button */}
-            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
-              <Button
-                onClick={handleAddNew}
-                label={currentTab === 'myaccounts' ? 'Add New Account' : 'Add New Contact'}
-              />
-            </div>
+            {!selectionMode && (
+              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  onClick={handleAddNew}
+                  label={currentTab === 'myaccounts' ? 'Add New Account' : 'Add New Contact'}
+                />
+              </div>
+            )}
           </FlexCol>
         </Padded>
       </Content>
