@@ -25,14 +25,14 @@ type ViewState = 'loading' | 'webview' | 'status' | 'error'
 
 export default function Verification() {
   const { kycAuthParams, setKycAuthParams } = useContext(FlowContext)
-  const { navigate, screen } = useContext(NavigationContext)
-  const { goBack } = useContext(OptionsContext)
+  const { navigate, screen, goBack: navGoBack } = useContext(NavigationContext)
+  const { goBack: optionsGoBack } = useContext(OptionsContext)
 
   // Determine back behavior based on how we got here
-  // If we're on SettingsKYC page (standalone), navigate back to Settings
+  // If we're on SettingsKYC page (standalone), use navigation history goBack
   // If we're within Settings page (via menu option), use OptionsContext goBack
   const isStandalonePage = screen === Pages.SettingsKYC
-  const handleBack = isStandalonePage ? () => navigate(Pages.Settings) : goBack
+  const handleBack = isStandalonePage ? navGoBack : optionsGoBack
 
   const [viewState, setViewState] = useState<ViewState>('loading')
   const [kycStatus, setKycStatus] = useState<KycStatus>('not_started')

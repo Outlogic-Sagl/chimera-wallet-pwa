@@ -27,7 +27,8 @@ import { canBrowserShareData, shareData } from '../../../lib/share'
 import { NotificationsContext } from '../../../providers/notifications'
 import { encodeBip21 } from '../../../lib/bip21'
 import { ASSETS, type AssetSymbol } from '../../../lib/assets'
-import AssetIcon from '../../../icons/AssetIcon'
+import AssetSelector from '../../../components/AssetSelector'
+import NetworkSelector from '../../../components/NetworkSelector'
 import WhenIcon from '../../../icons/When'
 import FeesIcon from '../../../icons/Fees'
 import {
@@ -65,8 +66,8 @@ export default function ReceiveAmount() {
   const [bip21uri, setBip21uri] = useState('')
   const [showQrCode, setShowQrCode] = useState(false)
 
-  // Asset and network are pre-selected by AssetNetworkSelect
-  const selectedAsset: AssetSymbol = 'BTC' // For now only BTC is supported
+  // Asset and network can be changed, initialized from AssetNetworkSelect or defaults
+  const [selectedAsset, setSelectedAsset] = useState<AssetSymbol>('BTC')
   const selectedMethod = recvInfo.method ?? TRANSFER_METHOD.bitcoin
 
   useEffect(() => {
@@ -240,23 +241,22 @@ export default function ReceiveAmount() {
         <Padded>
           <FlexCol>
             <ErrorMessage error={Boolean(error)} text={error} />
-            {/* Network indicator (non-editable - set by AssetNetworkSelect) */}
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.75rem 1rem',
-              borderRadius: '12px',
-              backgroundColor: 'var(--white05)',
-              border: '1px solid var(--white10)',
-              justifyContent: 'center',
-              marginBottom: '1rem',
-            }}>
-              <AssetIcon symbol={selectedAsset} size={24} />
-              <span style={{ color: 'white', fontSize: '1rem' }}>
-                {ASSETS[selectedAsset].name} via {TRANSFER_METHOD_LABELS[selectedMethod] || selectedMethod}
-              </span>
-            </div>
+            <AssetSelector
+              label='Asset'
+              selected={selectedAsset}
+              onSelect={setSelectedAsset}
+            />
+            <NetworkSelector
+              label='Network'
+              selected={selectedMethod}
+              onSelect={(network) => {
+                if (network === TRANSFER_METHOD.bank) {
+                  navigate(Pages.BankReceive)
+                  return
+                }
+                setRecvInfo({ ...recvInfo, method: network, invoice: undefined })
+              }}
+            />
             {Boolean(methodWarningInfo || showLightningFees || methodTimeInfo || methodFeesInfo) && (
               <InfoContainer>
                 {methodWarningInfo ? <InfoLine compact color='orange' text={methodWarningInfo} /> : null}

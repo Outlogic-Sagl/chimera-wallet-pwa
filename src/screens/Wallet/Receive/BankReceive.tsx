@@ -10,13 +10,22 @@ import Content from '../../../components/Content'
 import FlexCol from '../../../components/FlexCol'
 import Header from '../../../components/Header'
 import Padded from '../../../components/Padded'
-import Text, { TextLabel, TextSecondary } from '../../../components/Text'
+import { TextLabel, TextSecondary } from '../../../components/Text'
 import Button from '../../../components/Button'
 import ButtonsOnBottom from '../../../components/ButtonsOnBottom'
-import Shadow from '../../../components/Shadow'
 import ErrorMessage from '../../../components/Error'
-import Info from '../../../components/Info'
-// Using native HTML input elements for form fields
+import Info, { InfoLine } from '../../../components/Info'
+import InfoContainer from '../../../components/InfoContainer'
+import AssetSelector from '../../../components/AssetSelector'
+import NetworkSelector from '../../../components/NetworkSelector'
+import BankTransferValidationMessages from '../../../components/BankTransferValidation'
+import { ASSETS, type AssetSymbol } from '../../../lib/assets'
+import { TRANSFER_METHOD, type TransferMethod } from '../../../lib/transferMethods'
+import { prettyNumber } from '../../../lib/format'
+import { ConfigContext } from '../../../providers/config'
+import { FiatContext } from '../../../providers/fiat'
+import WhenIcon from '../../../icons/When'
+import FeesIcon from '../../../icons/Fees'
 import {
   SepaDataView,
   SwiftDataView,
@@ -36,20 +45,23 @@ import {
   type BankCircuit,
   type BankCurrency,
 } from '../../../lib/bankTransferConfig'
-import { prettyNumber } from '../../../lib/format'
+import { getUserEmailForBankTransfer } from '../../../lib/kyc'
 
 export default function BankReceive() {
   const { navigate, goBack } = useContext(NavigationContext)
-  const { bankRecvInfo, setBankRecvInfo } = useContext(FlowContext)
+  const { bankRecvInfo, setBankRecvInfo, recvInfo, setRecvInfo } = useContext(FlowContext)
   const { svcWallet } = useContext(WalletContext)
 
-  const config = getBankTransferConfigSync()
+  const bankConfig = getBankTransferConfigSync()
+
+  // Asset and network state (matching ReceiveAmount layout)
+  const [selectedAsset, setSelectedAsset] = useState<AssetSymbol>('BTC')
+  const selectedMethod: TransferMethod = recvInfo.method ?? TRANSFER_METHOD.bank
 
   // Form state
-  const [currency, setCurrency] = useState<BankCurrency>(bankRecvInfo.currency || config.defaultCurrency)
+  const [currency, setCurrency] = useState<BankCurrency>(bankRecvInfo.currency || bankConfig.defaultCurrency)
   const [circuit, setCircuit] = useState<BankCircuit>(bankRecvInfo.circuit || getDefaultCircuit(currency))
-  const [amount, setAmount] = useState<string>(bankRecvInfo.amount > 0 ? String(bankRecvInfo.amount) : '')
-  const [email, setEmail] = useState<string>('')
+  const [amount, setAmount] = useState<number>(bankRecvInfo.amount || 0)
   
   // API state
   const [loading, setLoading] = useState(false)
@@ -58,7 +70,7 @@ export default function BankReceive() {
   const [arkAddress, setArkAddress] = useState<string>('')
 
   // Validation
-  const numAmount = parseFloat(amount) || 0
+  const numAmount = amount
   const validation = useBankTransferValidation({ amount: numAmount, currency })
 
   // Load ark address on mount
@@ -81,11 +93,8 @@ export default function BankReceive() {
     setCircuit(getDefaultCircuit(currency))
   }, [currency])
 
-  const handleAmountChange = (value: string) => {
-    // Allow only numbers and decimal point
-    if (/^\d*\.?\d*$/.test(value)) {
-      setAmount(value)
-    }
+  const handleAmountChange = (newAmount: number) => {
+    setAmount(newAmount)
   }
 
   const handleCreateDeposit = async () => {
@@ -94,11 +103,6 @@ export default function BankReceive() {
         navigate(Pages.SettingsKYC)
         return
       }
-      return
-    }
-
-    if (!email) {
-      setError('Please enter your email address')
       return
     }
 
@@ -112,7 +116,7 @@ export default function BankReceive() {
       setError('')
 
       const response = await createBankDeposit({
-        email,
+        email: getUserEmailForBankTransfer(),
         from_amount: numAmount,
         from_asset: currency,
         to_asset: 'BTC',
@@ -230,18 +234,71 @@ export default function BankReceive() {
   // Show form if no order yet
   return (
     <>
-      <Header text='Bank Deposit' back={goBack} />
+      <Header text='Receive' back={goBack} />
       <Content>
         <Padded>
           <FlexCol gap='1.5rem'>
             <ErrorMessage error={Boolean(error)} text={error} />
 
-            <Info color='blue' title='Deposit via Bank Transfer'>
-              <TextSecondary>
-                Transfer fiat currency from your bank account to receive Bitcoin.
-                Minimum deposit: {config.minimumOrderValue} {currency}
-              </TextSecondary>
-            </Info>
+            {/* Inline Editable Amount Section (matching ReceiveAmount) */}
+            <div style={{ textAlign: 'center', width: '100%', marginTop: '1rem' }}>
+              <div style={{ marginBottom: '0.5rem', color: 'var(--white70)', fontSize: '0.875rem' }}>
+                Amount
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <input
+                  type="number"
+                  value={amount || ''}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    if (value === '') {
+                      setAmount(0)
+                    } else {
+                      const numValue = parseFloat(value)
+                      if (!isNaN(numValue) && numValue >= 0) {
+                        handleAmountChange(numValue)
+                      }
+                    }
+                  }}
+                  placeholder="0"
+                  style={{
+                    fontSize: '2.5rem',
+                    fontWeight: 700,
+                    color: 'white',
+                    fontFamily: 'monospace',
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                    textAlign: 'center',
+                    width: '12ch',
+                    padding: '0.25rem',
+                  }}
+                />
+                <span style={{ fontSize: '1.25rem', fontWeight: 600, color: 'white' }}>
+                  {currency}
+                </span>
+              </div>
+              {/* BTC equivalent */}
+              <div style={{ fontSize: '1rem', color: 'var(--white50)', marginTop: '0.25rem' }}>
+                ≈ {prettyNumber(amount / 50000, 8)} BTC
+              </div>
+            </div>
+
+            <AssetSelector
+              label='Asset'
+              selected={selectedAsset}
+              onSelect={setSelectedAsset}
+            />
+            <NetworkSelector
+              label='Network'
+              selected={selectedMethod}
+              onSelect={(network) => {
+                if (network !== TRANSFER_METHOD.bank) {
+                  setRecvInfo({ ...recvInfo, method: network })
+                  navigate(Pages.ReceiveAmount)
+                }
+              }}
+            />
 
             {/* Currency Selection */}
             <FlexCol gap='0.5rem'>
@@ -249,68 +306,18 @@ export default function BankReceive() {
               <BankCurrencySelector selectedCurrency={currency} onSelect={setCurrency} />
             </FlexCol>
 
-            {/* Amount Input */}
-            <FlexCol gap='0.5rem'>
-              <TextLabel>Amount ({currency})</TextLabel>
-              <Shadow input>
-                <input
-                  type='text'
-                  inputMode='decimal'
-                  value={amount}
-                  onChange={(e) => handleAmountChange(e.target.value)}
-                  placeholder={`Min ${config.minimumOrderValue}`}
-                  style={{
-                    width: '100%',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--white)',
-                    fontSize: '1rem',
-                    outline: 'none',
-                  }}
-                />
-              </Shadow>
-              {Boolean(validation.errorMessage) && (
-                <Text small color='orange'>
-                  {validation.errorMessage}
-                </Text>
-              )}
-            </FlexCol>
+            {/* Bank Transfer Terms & Conditions */}
+            <InfoContainer>
+              <InfoLine compact icon={<WhenIcon />} text='Transfer time: The transfer time might vary depending on the bank, from instant to 48 hours.' />
+              <InfoLine 
+                compact 
+                icon={<FeesIcon />} 
+                text='Fees: 0.5% + 10 CHF if over 1000 CHF, or 1% + 10 CHF if under 1000 CHF. Your bank might charge additional fees.' 
+              />
+            </InfoContainer>
 
-            {/* Email Input */}
-            <FlexCol gap='0.5rem'>
-              <TextLabel>Email Address</TextLabel>
-              <Shadow input>
-                <input
-                  type='email'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder='your@email.com'
-                  style={{
-                    width: '100%',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--white)',
-                    fontSize: '1rem',
-                    outline: 'none',
-                  }}
-                />
-              </Shadow>
-              <TextSecondary>We'll send order updates to this email</TextSecondary>
-            </FlexCol>
-
-            {/* KYC Warning */}
-            {validation.kycRequired && !validation.kycVerified ? (
-              <Info color='orange' title='KYC Required'>
-                <TextSecondary>
-                  Amounts over {config.kycThreshold} {currency} require identity verification.
-                </TextSecondary>
-                <Button
-                  label='Complete Verification'
-                  onClick={() => navigate(Pages.SettingsKYC)}
-                  secondary
-                />
-              </Info>
-            ) : null}
+            {/* Validation and KYC messages */}
+            <BankTransferValidationMessages validation={validation} />
           </FlexCol>
         </Padded>
       </Content>
@@ -318,7 +325,7 @@ export default function BankReceive() {
         <Button
           label={loading ? 'Creating Order...' : 'Continue'}
           onClick={handleCreateDeposit}
-          disabled={!validation.canProceed || !email || loading}
+          disabled={!validation.canProceed || loading}
           loading={loading}
         />
       </ButtonsOnBottom>

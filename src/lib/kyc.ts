@@ -6,6 +6,7 @@ const KYC_ACCESS_TOKEN_KEY = 'kyc_access_token'
 const KYC_REFRESH_TOKEN_KEY = 'kyc_refresh_token'
 const KYC_TOKEN_EXPIRY_KEY = 'kyc_token_expiry'
 const KYC_USER_ID_KEY = 'kyc_user_id'
+const KYC_EMAIL_KEY = 'kyc_email'
 const KYC_STATUS_KEY = 'kyc_status'
 
 // KYC Status Types
@@ -99,6 +100,14 @@ export const getKycUserId = (): string | null => {
   return localStorage.getItem(KYC_USER_ID_KEY)
 }
 
+export const saveKycEmail = (email: string): void => {
+  localStorage.setItem(KYC_EMAIL_KEY, email)
+}
+
+export const getKycEmail = (): string | null => {
+  return localStorage.getItem(KYC_EMAIL_KEY)
+}
+
 export const isKycTokenExpired = (): boolean => {
   const expiryStr = localStorage.getItem(KYC_TOKEN_EXPIRY_KEY)
   if (!expiryStr) return true
@@ -120,6 +129,7 @@ export const clearKycData = (): void => {
   localStorage.removeItem(KYC_REFRESH_TOKEN_KEY)
   localStorage.removeItem(KYC_TOKEN_EXPIRY_KEY)
   localStorage.removeItem(KYC_USER_ID_KEY)
+  localStorage.removeItem(KYC_EMAIL_KEY)
   localStorage.removeItem(KYC_STATUS_KEY)
 }
 
@@ -160,6 +170,11 @@ export const confirmMagicLink = async (params: KycAuthParams): Promise<KycTokens
   const tokenData = data.token
   if (!tokenData || !tokenData.accessToken) {
     throw new Error('Invalid token response')
+  }
+
+  // Extract and save email if provided (at same level as token)
+  if (data.email) {
+    saveKycEmail(data.email)
   }
 
   // Calculate expiresIn from expiryTime if provided
@@ -331,4 +346,21 @@ export const parseKycDeepLink = (hashOrQuery: string): KycAuthParams | null => {
   }
 
   return null
+}
+
+/**
+ * Get user email for bank transfers
+ * Returns KYC email if available, otherwise generates a dummy email
+ */
+export const getUserEmailForBankTransfer = (): string => {
+  // First try to get KYC email
+  const kycEmail = getKycEmail()
+  if (kycEmail) {
+    return kycEmail
+  }
+
+  // Generate dummy email using crypto.randomUUID()
+  const uuid1 = crypto.randomUUID()
+  const uuid2 = crypto.randomUUID()
+  return `${uuid1}@${uuid2}.com`
 }

@@ -182,7 +182,7 @@ export const pageComponent = (page: Pages, navigationData?: Record<string, unkno
     case Pages.Apps:
       return <Apps />
     case Pages.AssetNetworkSelect:
-      return <AssetNetworkSelect mode={(navigationData?.mode as 'send' | 'receive') || 'receive'} />
+      return <AssetNetworkSelect mode={navigationData?.mode as 'send' | 'receive' | undefined} />
     case Pages.Init:
       return <Init />
     case Pages.InitConnect:

@@ -16,7 +16,14 @@ import ButtonsOnBottom from '../../../components/ButtonsOnBottom'
 import Shadow from '../../../components/Shadow'
 import ErrorMessage from '../../../components/Error'
 import Info from '../../../components/Info'
-// Using native HTML input elements for form fields
+import AssetSelector from '../../../components/AssetSelector'
+import NetworkSelector from '../../../components/NetworkSelector'
+import BankTransferValidationMessages from '../../../components/BankTransferValidation'
+import { ASSETS, type AssetSymbol } from '../../../lib/assets'
+import { TRANSFER_METHOD, type TransferMethod } from '../../../lib/transferMethods'
+import { prettyNumber } from '../../../lib/format'
+import { ConfigContext } from '../../../providers/config'
+import { FiatContext } from '../../../providers/fiat'
 import {
   BankCircuitSelector,
   BankCurrencySelector,
@@ -34,20 +41,25 @@ import {
   type BankCurrency,
   type BankData,
 } from '../../../lib/bankTransferConfig'
-import { prettyAmount } from '../../../lib/format'
+import { getUserEmailForBankTransfer } from '../../../lib/kyc'
 
 export default function BankSend() {
   const { navigate, goBack } = useContext(NavigationContext)
-  const { bankSendInfo, setBankSendInfo } = useContext(FlowContext)
+  const { bankSendInfo, setBankSendInfo, sendInfo, setSendInfo } = useContext(FlowContext)
   const { balance } = useContext(WalletContext)
+  const { config, useFiat } = useContext(ConfigContext)
+  const { toFiat } = useContext(FiatContext)
 
-  const config = getBankTransferConfigSync()
+  const bankConfig = getBankTransferConfigSync()
+
+  // Asset and network state (matching SendForm layout)
+  const [selectedAsset, setSelectedAsset] = useState<AssetSymbol>('BTC')
+  const selectedMethod: TransferMethod = sendInfo.method ?? TRANSFER_METHOD.bank
 
   // Form state
-  const [currency, setCurrency] = useState<BankCurrency>(bankSendInfo.currency || config.defaultCurrency)
+  const [currency, setCurrency] = useState<BankCurrency>(bankSendInfo.currency || bankConfig.defaultCurrency)
   const [circuit, setCircuit] = useState<BankCircuit>(bankSendInfo.circuit || getDefaultCircuit(currency))
-  const [amount, setAmount] = useState<string>(bankSendInfo.amount > 0 ? String(bankSendInfo.amount) : '')
-  const [email, setEmail] = useState<string>('')
+  const [amount, setAmount] = useState<number>(bankSendInfo.amount || 0)
 
   // Bank details form state
   const [iban, setIban] = useState<string>('')
@@ -60,7 +72,7 @@ export default function BankSend() {
   const [error, setError] = useState('')
 
   // Validation
-  const numAmount = parseFloat(amount) || 0
+  const numAmount = amount
   const validation = useBankTransferValidation({ amount: numAmount, currency })
 
   // Update circuit when currency changes
@@ -71,11 +83,8 @@ export default function BankSend() {
     }
   }, [currency])
 
-  const handleAmountChange = (value: string) => {
-    // Allow only numbers and decimal point
-    if (/^\d*\.?\d*$/.test(value)) {
-      setAmount(value)
-    }
+  const handleAmountChange = (newAmount: number) => {
+    setAmount(newAmount)
   }
 
   const validateBankDetails = (): BankData | null => {
@@ -129,11 +138,6 @@ export default function BankSend() {
       return
     }
 
-    if (!email) {
-      setError('Please enter your email address')
-      return
-    }
-
     const bankData = validateBankDetails()
     if (!bankData) return
 
@@ -142,7 +146,7 @@ export default function BankSend() {
       setError('')
 
       const response = await createBankWithdraw({
-        email,
+        email: getUserEmailForBankTransfer(),
         fromAmount: numAmount,
         fromAsset: 'BTC',
         toAsset: currency,
@@ -340,30 +344,75 @@ export default function BankSend() {
     }
   }
 
-  const canSubmit = validation.canProceed && email && isBankDetailsComplete() && !loading
+  const canSubmit = validation.canProceed && isBankDetailsComplete() && !loading
 
   return (
     <>
-      <Header text='Bank Withdrawal' back={goBack} />
+      <Header text='Send' back={goBack} />
       <Content>
         <Padded>
           <FlexCol gap='1.5rem'>
             <ErrorMessage error={Boolean(error)} text={error} />
 
-            <Info color='blue' title='Withdraw to Bank'>
-              <TextSecondary>
-                Convert your Bitcoin to fiat currency and send to your bank account.
-                Minimum withdrawal: {config.minimumOrderValue} {currency}
-              </TextSecondary>
-            </Info>
+            {/* Inline Editable Amount Section (matching SendForm) */}
+            <div style={{ textAlign: 'center', width: '100%', marginTop: '1rem' }}>
+              <div style={{ marginBottom: '0.5rem', color: 'var(--white70)', fontSize: '0.875rem' }}>
+                Amount
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <input
+                  type="number"
+                  value={amount || ''}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    if (value === '') {
+                      setAmount(0)
+                    } else {
+                      const numValue = parseFloat(value)
+                      if (!isNaN(numValue) && numValue >= 0) {
+                        handleAmountChange(numValue)
+                      }
+                    }
+                  }}
+                  placeholder="0"
+                  style={{
+                    fontSize: '2.5rem',
+                    fontWeight: 700,
+                    color: 'white',
+                    fontFamily: 'monospace',
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                    textAlign: 'center',
+                    width: '12ch',
+                    padding: '0.25rem',
+                  }}
+                />
+                <span style={{ fontSize: '1.25rem', fontWeight: 600, color: 'white' }}>
+                  {currency}
+                </span>
+              </div>
+              {/* BTC equivalent */}
+              <div style={{ fontSize: '1rem', color: 'var(--white50)', marginTop: '0.25rem' }}>
+                ≈ {prettyNumber(amount / 50000, 8)} BTC
+              </div>
+            </div>
 
-            {/* Current Balance */}
-            <Shadow fat>
-              <FlexCol gap='0.25rem'>
-                <TextSecondary>Available Balance</TextSecondary>
-                <Text bold>{prettyAmount(balance)}</Text>
-              </FlexCol>
-            </Shadow>
+            <AssetSelector
+              label='Asset'
+              selected={selectedAsset}
+              onSelect={setSelectedAsset}
+            />
+            <NetworkSelector
+              label='Network'
+              selected={selectedMethod}
+              onSelect={(network) => {
+                if (network !== TRANSFER_METHOD.bank) {
+                  setSendInfo({ ...sendInfo, method: network })
+                  navigate(Pages.SendForm)
+                }
+              }}
+            />
 
             {/* Currency Selection */}
             <FlexCol gap='0.5rem'>
@@ -381,74 +430,14 @@ export default function BankSend() {
               />
             </FlexCol>
 
-            {/* Amount Input */}
-            <FlexCol gap='0.5rem'>
-              <TextLabel>Amount ({currency})</TextLabel>
-              <Shadow input>
-                <input
-                  type='text'
-                  inputMode='decimal'
-                  value={amount}
-                  onChange={(e) => handleAmountChange(e.target.value)}
-                  placeholder={`Min ${config.minimumOrderValue}`}
-                  style={{
-                    width: '100%',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--white)',
-                    fontSize: '1rem',
-                    outline: 'none',
-                  }}
-                />
-              </Shadow>
-              {validation.errorMessage ? (
-                <Text small color='orange'>
-                  {validation.errorMessage}
-                </Text>
-              ) : null}
-            </FlexCol>
-
-            {/* Email Input */}
-            <FlexCol gap='0.5rem'>
-              <TextLabel>Email Address</TextLabel>
-              <Shadow input>
-                <input
-                  type='email'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder='your@email.com'
-                  style={{
-                    width: '100%',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--white)',
-                    fontSize: '1rem',
-                    outline: 'none',
-                  }}
-                />
-              </Shadow>
-              <TextSecondary>We'll send order updates to this email</TextSecondary>
-            </FlexCol>
-
             {/* Bank Details Section */}
             <FlexCol gap='1rem'>
               <TextLabel>Bank Details</TextLabel>
               {renderBankInputs()}
             </FlexCol>
 
-            {/* KYC Warning */}
-            {validation.kycRequired && !validation.kycVerified ? (
-              <Info color='orange' title='KYC Required'>
-                <TextSecondary>
-                  Amounts over {config.kycThreshold} {currency} require identity verification.
-                </TextSecondary>
-                <Button
-                  label='Complete Verification'
-                  onClick={() => navigate(Pages.SettingsKYC)}
-                  secondary
-                />
-              </Info>
-            ) : null}
+            {/* Validation and KYC messages */}
+            <BankTransferValidationMessages validation={validation} />
           </FlexCol>
         </Padded>
       </Content>

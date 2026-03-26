@@ -120,7 +120,7 @@ export const getSupportedAssets = async (): Promise<SupportedAssetsResponse> => 
 
 export const getOrderStatus = async (orderId: string): Promise<ChimeraOrder> => {
   const baseUrl = getBaseUrl()
-  const response = await fetch(`${baseUrl}/order/${orderId}/`, {
+  const response = await fetch(`${baseUrl}/otc/order/${orderId}/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

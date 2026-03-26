@@ -44,7 +44,8 @@ import { FeesContext } from '../../../providers/fees'
 import { InfoLine } from '../../../components/Info'
 import { getNetworkConfig } from '../../../lib/networks'
 import { ASSETS, type AssetSymbol } from '../../../lib/assets'
-import AssetIcon from '../../../icons/AssetIcon'
+import AssetSelector from '../../../components/AssetSelector'
+import NetworkSelector from '../../../components/NetworkSelector'
 import WhenIcon from '../../../icons/When'
 import FeesIcon from '../../../icons/Fees'
 import {
@@ -85,8 +86,8 @@ export default function SendForm() {
   const [textValue, setTextValue] = useState('')
   const [tryingToSelfSend, setTryingToSelfSend] = useState(false)
 
-  // Asset and network are pre-selected by AssetNetworkSelect
-  const selectedAsset: AssetSymbol = 'BTC' // For now only BTC is supported
+  // Asset and network can be changed, initialized from AssetNetworkSelect or defaults
+  const [selectedAsset, setSelectedAsset] = useState<AssetSymbol>('BTC')
   const selectedMethod: TransferMethod = sendInfo.method ?? TRANSFER_METHOD.bitcoin
 
   const smartSetError = (str: string) => {
@@ -542,22 +543,34 @@ export default function SendForm() {
               <div style={{ fontSize: '1rem', color: 'var(--white50)', marginTop: '0.25rem' }}>
                 {prettyNumber(toFiat(amount || 0), 2)} {config.fiat}
               </div>
-              {/* Network indicator (non-editable - set by AssetNetworkSelect) */}
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                marginTop: '1rem',
-                padding: '0.5rem 1rem',
-                borderRadius: '2rem',
-                backgroundColor: 'var(--white05)',
-              }}>
-                <AssetIcon symbol={selectedAsset} size={20} />
-                <span style={{ color: 'white', fontSize: '0.875rem' }}>
-                  {ASSETS[selectedAsset].name} via {TRANSFER_METHOD_LABELS[selectedMethod] || selectedMethod}
-                </span>
-              </div>
             </div>
+            <AssetSelector
+              label='Asset'
+              selected={selectedAsset}
+              onSelect={setSelectedAsset}
+            />
+            <NetworkSelector
+              label='Network'
+              selected={selectedMethod}
+              onSelect={(network) => {
+                // Navigate to bank send screen if bank is selected
+                if (network === TRANSFER_METHOD.bank) {
+                  navigate(Pages.BankSend)
+                  return
+                }
+                setRecipient('')
+                setSendInfo({
+                  ...sendInfo,
+                  method: network,
+                  address: '',
+                  arkAddress: '',
+                  invoice: '',
+                  lnUrl: undefined,
+                  pendingSwap: undefined,
+                  recipient: '',
+                })
+              }}
+            />
             <InputAddress
                 name='send-address'
                 focus={focus === 'recipient'}

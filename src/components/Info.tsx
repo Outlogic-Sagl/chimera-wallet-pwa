@@ -16,7 +16,7 @@ export default function Info({ children, color, icon, title }: InfoProps) {
     <FlexCol margin='0 0 2rem 0'>
       <FlexRow color={color}>
         {icon}
-        <Text bold>{title}</Text>
+        <Text bold color={color}>{title}</Text>
       </FlexRow>
       <hr style={{ backgroundColor: 'var(--dark20)', width: '100%' }} />
       <FlexRow alignItems='flex-start'>
