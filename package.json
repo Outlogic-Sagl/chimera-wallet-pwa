@@ -6,6 +6,7 @@
   "dependencies": {
     "@arkade-os/boltz-swap": "0.2.19",
     "@arkade-os/sdk": "0.3.12",
+    "@intercom/messenger-js-sdk": "^0.0.18",
     "@ionic/react": "^8.5.6",
     "@lendasat/lendasat-wallet-bridge": "^0.0.90",
     "@noble/curves": "^2.0.1",

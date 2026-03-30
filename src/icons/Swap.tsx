@@ -78,31 +78,31 @@ export default function SwapIcon({ big = false }: { big?: boolean }) {
 export function SwapSuccessIcon() {
   return (
     <svg width='42' height='43' viewBox='0 0 42 43' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <rect y='0.5' width='40' height='40' rx='20' fill='var(--black)' fillOpacity='0.1' />
+      <rect y='0.5' width='40' height='40' rx='20' fill='var(--white)' fillOpacity='0.1' />
       <path
         d='M21.875 12.375L26.25 16.75L21.875 21.125'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M25.5809 16.75H13.75'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M18.125 28.625L13.75 24.25L18.125 19.875'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M14.4531 24.25H26.25'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
@@ -120,31 +120,31 @@ export function SwapSuccessIcon() {
 export function SwapPendingIcon() {
   return (
     <svg width='42' height='43' viewBox='0 0 42 43' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <rect y='0.5' width='40' height='40' rx='20' fill='var(--black)' fillOpacity='0.1' />
+      <rect y='0.5' width='40' height='40' rx='20' fill='var(--white)' fillOpacity='0.1' />
       <path
         d='M21.875 12.375L26.25 16.75L21.875 21.125'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M25.5809 16.75H13.75'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M18.125 28.625L13.75 24.25L18.125 19.875'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M14.4531 24.25H26.25'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
@@ -162,31 +162,31 @@ export function SwapPendingIcon() {
 export function SwapFailedIcon() {
   return (
     <svg width='42' height='43' viewBox='0 0 42 43' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <rect y='0.5' width='40' height='40' rx='20' fill='var(--black)' fillOpacity='0.1' />
+      <rect y='0.5' width='40' height='40' rx='20' fill='var(--white)' fillOpacity='0.1' />
       <path
         d='M21.875 12.375L26.25 16.75L21.875 21.125'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M25.5809 16.75H13.75'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M18.125 28.625L13.75 24.25L18.125 19.875'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
         d='M14.4531 24.25H26.25'
-        stroke='var(--black)'
+        stroke='var(--white)'
         strokeWidth='1.5'
         strokeLinecap='round'
         strokeLinejoin='round'

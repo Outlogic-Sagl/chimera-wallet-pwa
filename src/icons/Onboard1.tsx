@@ -9,7 +9,7 @@ export function OnboardImage1() {
             y='74.5273'
             width='52.0273'
             height='52.0273'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <rect
@@ -18,7 +18,7 @@ export function OnboardImage1() {
             y='21.5'
             width='52.0273'
             height='52.0273'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <rect
@@ -27,7 +27,7 @@ export function OnboardImage1() {
             y='127.555'
             width='52.0273'
             height='52.0273'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <g opacity='0.5'>
@@ -36,7 +36,7 @@ export function OnboardImage1() {
             </mask>
             <path
               d='M389.585 127.055H390.585V126.055H389.585V127.055ZM389.585 180.082V181.082H390.585V180.082H389.585ZM336.558 128.055H389.585V126.055H336.558V128.055ZM388.585 127.055V180.082H390.585V127.055H388.585ZM389.585 179.082H336.558V181.082H389.585V179.082Z'
-              fill='var(--black)'
+              fill='var(--white)'
               fillOpacity='0.05'
               mask='url(#path-4-inside-1_3383_11434)'
             />
@@ -47,7 +47,7 @@ export function OnboardImage1() {
             y='180.503'
             width='52.0273'
             height='52.0273'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <mask id='path-7-inside-2_3383_11434' fill='white'>
@@ -55,7 +55,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M230.946 127.055H229.946V128.055H230.946V127.055ZM283.973 126.055H230.946V128.055H283.973V126.055ZM231.946 127.055V74.0273H229.946V127.055H231.946Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-7-inside-2_3383_11434)'
           />
@@ -64,7 +64,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M283.973 179.082H230.946V181.082H283.973V179.082Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-9-inside-3_3383_11434)'
           />
@@ -73,7 +73,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M335.558 74.0273L335.558 127.055L337.558 127.055L337.558 74.0273L335.558 74.0273ZM284.531 127.055L284.531 74.0273L282.531 74.0273L282.531 127.055L284.531 127.055Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-11-inside-4_3383_11434)'
           />
@@ -82,7 +82,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M230.945 180.082V181.082H231.945V180.082H230.945ZM177.917 180.082H176.917V181.082H177.917V180.082ZM229.945 127.055V180.082H231.945V127.055H229.945ZM230.945 179.082H177.917V181.082H230.945V179.082ZM178.917 180.082V127.055H176.917V180.082H178.917Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-13-inside-5_3383_11434)'
           />
@@ -91,7 +91,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M336.559 233.109V234.109H337.559V233.109H336.559ZM335.559 180.082V233.109H337.559V180.082H335.559ZM336.559 232.109H283.532V234.109H336.559V232.109Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-15-inside-6_3383_11434)'
           />
@@ -100,7 +100,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M230.945 233.109V234.109H231.945V233.109H230.945ZM229.945 180.082V233.109H231.945V180.082H229.945ZM230.945 232.109H177.917V234.109H230.945V232.109Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-17-inside-7_3383_11434)'
           />
@@ -110,7 +110,7 @@ export function OnboardImage1() {
             width='52.0273'
             height='52.0273'
             transform='rotate(90 283.032 21.5)'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <mask id='path-20-inside-8_3383_11434' fill='white'>
@@ -118,7 +118,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M389.585 21L390.585 21L390.585 20L389.585 20L389.585 21ZM389.585 74.0273L389.585 75.0273L390.585 75.0273L390.585 74.0273L389.585 74.0273ZM388.585 21L388.585 74.0273L390.585 74.0273L390.585 21L388.585 21ZM389.585 73.0273L336.558 73.0273L336.558 75.0273L389.585 75.0273L389.585 73.0273ZM336.558 22L389.585 22L389.585 20L336.558 20L336.558 22Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-20-inside-8_3383_11434)'
           />
@@ -131,7 +131,7 @@ export function OnboardImage1() {
             width='52.0273'
             height='52.0273'
             transform='rotate(180 211.168 417.582)'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <rect
@@ -141,7 +141,7 @@ export function OnboardImage1() {
             width='52.0273'
             height='52.0273'
             transform='rotate(180 105.553 470.609)'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <rect
@@ -151,7 +151,7 @@ export function OnboardImage1() {
             width='52.0273'
             height='52.0273'
             transform='rotate(180 105.553 364.555)'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <g opacity='0.5'>
@@ -160,7 +160,7 @@ export function OnboardImage1() {
             </mask>
             <path
               d='M-3.8147e-05 365.055H-1.00004V366.055H-3.8147e-05V365.055ZM-3.8147e-05 312.027V311.027H-1.00004V312.027H-3.8147e-05ZM53.0272 364.055H-3.8147e-05V366.055H53.0272V364.055ZM0.999962 365.055V312.027H-1.00004V365.055H0.999962ZM-3.8147e-05 313.027H53.0272V311.027H-3.8147e-05V313.027Z'
-              fill='var(--black)'
+              fill='var(--white)'
               fillOpacity='0.05'
               mask='url(#path-25-inside-9_3383_11434)'
             />
@@ -172,7 +172,7 @@ export function OnboardImage1() {
             width='52.0273'
             height='52.0273'
             transform='rotate(180 264.085 311.605)'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <mask id='path-28-inside-10_3383_11434' fill='white'>
@@ -180,7 +180,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M158.639 365.054H159.639V364.054H158.639V365.054ZM105.612 366.054H158.639V364.054H105.612V366.054ZM157.639 365.054V418.082H159.639V365.054H157.639Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-28-inside-10_3383_11434)'
           />
@@ -189,7 +189,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M105.612 313.027H158.639V311.027H105.612V313.027Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-30-inside-11_3383_11434)'
           />
@@ -198,7 +198,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M54.0272 418.082L54.0272 365.054L52.0272 365.054L52.0272 418.082L54.0272 418.082ZM105.054 365.054L105.054 418.082L107.054 418.082L107.054 365.054L105.054 365.054Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-32-inside-12_3383_11434)'
           />
@@ -207,7 +207,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M158.64 312.027V311.027H157.64V312.027H158.64ZM211.668 312.027H212.668V311.027H211.668V312.027ZM159.64 365.055V312.027H157.64V365.055H159.64ZM158.64 313.027H211.668V311.027H158.64V313.027ZM210.668 312.027V365.055H212.668V312.027H210.668Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-34-inside-13_3383_11434)'
           />
@@ -216,7 +216,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M53.026 259V258H52.026V259H53.026ZM54.026 312.027V259H52.026V312.027H54.026ZM53.026 260H106.053V258H53.026V260Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-36-inside-14_3383_11434)'
           />
@@ -225,7 +225,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M158.64 259V258H157.64V259H158.64ZM159.64 312.027V259H157.64V312.027H159.64ZM158.64 260H211.668V258H158.64V260Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-38-inside-15_3383_11434)'
           />
@@ -235,7 +235,7 @@ export function OnboardImage1() {
             width='52.0273'
             height='52.0273'
             transform='rotate(-90 106.553 470.609)'
-            stroke='var(--black)'
+            stroke='var(--white)'
             strokeOpacity='0.05'
           />
           <mask id='path-41-inside-16_3383_11434' fill='white'>
@@ -243,7 +243,7 @@ export function OnboardImage1() {
           </mask>
           <path
             d='M0 471.109L-1 471.109L-1 472.109L-4.37114e-08 472.109L0 471.109ZM2.3179e-06 418.082L2.36161e-06 417.082L-0.999998 417.082L-0.999998 418.082L2.3179e-06 418.082ZM1 471.109L1 418.082L-0.999998 418.082L-1 471.109L1 471.109ZM2.27418e-06 419.082L53.0273 419.082L53.0273 417.082L2.36161e-06 417.082L2.27418e-06 419.082ZM53.0273 470.109L4.37114e-08 470.109L-4.37114e-08 472.109L53.0273 472.109L53.0273 470.109Z'
-            fill='var(--black)'
+            fill='var(--white)'
             fillOpacity='0.05'
             mask='url(#path-41-inside-16_3383_11434)'
           />

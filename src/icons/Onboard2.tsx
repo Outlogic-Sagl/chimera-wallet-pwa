@@ -2,20 +2,20 @@ export function OnboardImage2() {
   return (
     <svg style={{ width: '100%' }} viewBox='0 0 389 493' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <g clipPath='url(#clip0_3383_11432)'>
-        <rect opacity='0.26' width='10' height='10' transform='matrix(1 0 0 -1 308.705 107)' fill='var(--black)' />
-        <rect opacity='0.22' width='10' height='10' transform='matrix(1 0 0 -1 241.705 76)' fill='var(--black)' />
-        <rect opacity='0.36' width='10' height='10' transform='matrix(1 0 0 -1 178.705 107)' fill='var(--black)' />
-        <rect opacity='0.17' width='10' height='10' transform='matrix(1 0 0 -1 241.705 179)' fill='var(--black)' />
-        <rect opacity='0.3' width='10' height='10' transform='matrix(1 0 0 -1 61.7048 124)' fill='var(--black)' />
-        <rect opacity='0.39' width='10' height='10' transform='matrix(1 0 0 -1 147.705 53)' fill='var(--black)' />
-        <rect opacity='0.23' width='10' height='10' transform='matrix(1 0 0 -1 34.7048 28)' fill='var(--black)' />
-        <rect opacity='0.27' width='10' height='10' transform='matrix(1 0 0 -1 318.705 222)' fill='var(--black)' />
-        <rect opacity='0.37' width='10' height='10' transform='matrix(1 0 0 -1 97.7048 455)' fill='var(--black)' />
-        <rect opacity='0.38' width='10' height='10' transform='matrix(1 0 0 -1 39.7048 399)' fill='var(--black)' />
-        <rect opacity='0.23' width='10' height='10' transform='matrix(1 0 0 -1 273.705 414)' fill='var(--black)' />
-        <rect opacity='0.12' width='10' height='10' transform='matrix(1 0 0 -1 283.705 475)' fill='var(--black)' />
-        <rect opacity='0.28' width='10' height='10' transform='matrix(1 0 0 -1 149.705 409)' fill='var(--black)' />
-        <rect opacity='0.17' width='10' height='10' transform='matrix(1 0 0 -1 49.7048 201)' fill='var(--black)' />
+        <rect opacity='0.26' width='10' height='10' transform='matrix(1 0 0 -1 308.705 107)' fill='var(--white)' />
+        <rect opacity='0.22' width='10' height='10' transform='matrix(1 0 0 -1 241.705 76)' fill='var(--white)' />
+        <rect opacity='0.36' width='10' height='10' transform='matrix(1 0 0 -1 178.705 107)' fill='var(--white)' />
+        <rect opacity='0.17' width='10' height='10' transform='matrix(1 0 0 -1 241.705 179)' fill='var(--white)' />
+        <rect opacity='0.3' width='10' height='10' transform='matrix(1 0 0 -1 61.7048 124)' fill='var(--white)' />
+        <rect opacity='0.39' width='10' height='10' transform='matrix(1 0 0 -1 147.705 53)' fill='var(--white)' />
+        <rect opacity='0.23' width='10' height='10' transform='matrix(1 0 0 -1 34.7048 28)' fill='var(--white)' />
+        <rect opacity='0.27' width='10' height='10' transform='matrix(1 0 0 -1 318.705 222)' fill='var(--white)' />
+        <rect opacity='0.37' width='10' height='10' transform='matrix(1 0 0 -1 97.7048 455)' fill='var(--white)' />
+        <rect opacity='0.38' width='10' height='10' transform='matrix(1 0 0 -1 39.7048 399)' fill='var(--white)' />
+        <rect opacity='0.23' width='10' height='10' transform='matrix(1 0 0 -1 273.705 414)' fill='var(--white)' />
+        <rect opacity='0.12' width='10' height='10' transform='matrix(1 0 0 -1 283.705 475)' fill='var(--white)' />
+        <rect opacity='0.28' width='10' height='10' transform='matrix(1 0 0 -1 149.705 409)' fill='var(--white)' />
+        <rect opacity='0.17' width='10' height='10' transform='matrix(1 0 0 -1 49.7048 201)' fill='var(--white)' />
         <path
           d='M196.029 202.052H193.593V203.713H192.651V204.543H190.935V205.429H189.44V207.09H190.16V208.751H191.046V212.96H193.426V212.074H196.084V212.96H198.52V208.751H199.462V207.09H200.237V205.429H198.52V204.543H196.859V203.713H196.029V202.052Z'
           fill='var(--yellow)'
@@ -396,70 +396,70 @@ export function OnboardImage2() {
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 0.9646 247.777)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 0.9646 324.667)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='71.1713'
           transform='matrix(-1 0 0 1 7.31934 253.496)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
-        <rect x='41.671' y='241.422' width='70.5358' height='6.35458' fill='var(--black)' fillOpacity='0.3' />
-        <rect x='41.671' y='330.386' width='70.5358' height='6.35458' fill='var(--black)' fillOpacity='0.3' />
+        <rect x='41.671' y='241.422' width='70.5358' height='6.35458' fill='var(--white)' fillOpacity='0.3' />
+        <rect x='41.671' y='330.386' width='70.5358' height='6.35458' fill='var(--white)' fillOpacity='0.3' />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 41.671 247.777)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 118.562 247.777)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 118.562 324.667)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 42.3066 324.667)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='71.1713'
           transform='matrix(-1 0 0 1 124.916 253.496)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='71.1713'
           transform='matrix(-1 0 0 1 35.9514 253.496)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <path
           d='M79.4403 270.202L83.559 270.202L83.559 274.321L87.6777 274.321L87.6777 278.44L71.2029 278.44L71.2029 286.677L87.6777 286.677L87.6777 290.796L71.2029 290.796L71.2029 299.033L87.6777 299.033L87.6777 303.152L83.559 303.152L83.559 307.271L79.4403 307.271L79.4403 303.152L75.3216 303.152L75.3216 307.271L71.2029 307.271L71.2029 303.152L62.9655 303.152L62.9655 299.033L67.0842 299.033L67.0842 290.796L62.9655 290.796L62.9655 286.677L67.0842 286.677L67.0842 278.44L62.9655 278.44L62.9655 274.321L71.2029 274.321L71.2029 270.202L75.3216 270.202L75.3216 274.321L79.4403 274.321L79.4403 270.202ZM87.6777 299.033L87.6777 290.796L91.7964 290.796L91.7964 299.033L87.6777 299.033ZM87.6777 286.677L87.6777 278.44L91.7964 278.44L91.7964 286.677L87.6777 286.677Z'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <path
@@ -490,74 +490,74 @@ export function OnboardImage2() {
           d='M183.802 299V282.093H177.845V279.101H193.29V282.093H187.346V299H183.802ZM194.586 299L201.895 287.706L201.082 290.547V288.933L194.641 279.101H198.834L203.467 286.589H205.095L202.792 287.926L208.225 279.101H212.21L205.563 289.03V290.643L204.722 287.802L212.1 299H208.004L203.302 291.677H201.661L204.019 290.367L198.461 299H194.586Z'
           fill='white'
         />
-        <rect x='276.864' y='241.422' width='70.5358' height='6.35458' fill='var(--black)' fillOpacity='0.3' />
-        <rect x='276.864' y='330.386' width='70.5358' height='6.35458' fill='var(--black)' fillOpacity='0.3' />
+        <rect x='276.864' y='241.422' width='70.5358' height='6.35458' fill='var(--white)' fillOpacity='0.3' />
+        <rect x='276.864' y='330.386' width='70.5358' height='6.35458' fill='var(--white)' fillOpacity='0.3' />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 276.864 247.777)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 353.755 247.777)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 353.755 324.667)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 277.5 324.667)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='71.1713'
           transform='matrix(-1 0 0 1 360.109 253.496)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='71.1713'
           transform='matrix(-1 0 0 1 271.145 253.496)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <path
           d='M314.633 270.202L318.752 270.202L318.752 274.321L322.871 274.321L322.871 278.44L306.396 278.44L306.396 286.677L322.871 286.677L322.871 290.796L306.396 290.796L306.396 299.033L322.871 299.033L322.871 303.152L318.752 303.152L318.752 307.271L314.633 307.271L314.633 303.152L310.515 303.152L310.515 307.271L306.396 307.271L306.396 303.152L298.159 303.152L298.159 299.033L302.277 299.033L302.277 290.796L298.159 290.796L298.159 286.677L302.277 286.677L302.277 278.44L298.159 278.44L298.159 274.321L306.396 274.321L306.396 270.202L310.515 270.202L310.515 274.321L314.633 274.321L314.633 270.202ZM322.871 299.033L322.871 290.796L326.99 290.796L326.99 299.033L322.871 299.033ZM322.871 286.677L322.871 278.44L326.99 278.44L326.99 286.677L322.871 286.677Z'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 394.461 247.777)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='6.35458'
           transform='matrix(-1 0 0 1 395.097 324.667)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
         <rect
           width='6.35458'
           height='71.1713'
           transform='matrix(-1 0 0 1 388.741 253.496)'
-          fill='var(--black)'
+          fill='var(--white)'
           fillOpacity='0.3'
         />
       </g>

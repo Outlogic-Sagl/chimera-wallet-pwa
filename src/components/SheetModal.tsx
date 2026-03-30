@@ -9,7 +9,14 @@ interface SheetModalProps {
 
 export default function SheetModal({ children, isOpen, onClose }: SheetModalProps) {
   return (
-    <IonModal initialBreakpoint={1} isOpen={isOpen} onDidDismiss={onClose}>
+    <IonModal 
+      initialBreakpoint={1} 
+      isOpen={isOpen} 
+      onDidDismiss={onClose}
+      style={{
+        '--background': 'var(--ion-background-color)',
+      } as React.CSSProperties}
+    >
       <div
         style={{
           backgroundColor: 'var(--ion-background-color)',

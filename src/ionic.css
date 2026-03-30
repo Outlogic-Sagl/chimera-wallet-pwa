@@ -1,5 +1,5 @@
 :root {
-  --black: #fbfbfb;
+  --white: #fbfbfb;
   --black-bg: #101015;
   --blue-primary: #1F3BDB;
   --blue-medium: #061A8E;
@@ -46,6 +46,9 @@
   --asset-eth: #627EEA;
   --asset-trx: #EF0027;
   --asset-matic: #8247E5;
+  --qr-background: #ffffff;
+  --reminder-button-bg: #222222;
+  --reminder-button-color: #f7fafc;
   --input-bg: rgba(37, 37, 42, 1);
   --input-border-color: rgba(31, 59, 219, 0);
   --input-border-radius: 30px;
@@ -93,7 +96,7 @@
 }
 
 .ion-palette-dark {
-  --black: #fbfbfb;
+  --white: #fbfbfb;
   --cream: #d9d9d9;
   --greenbg: #092d13;
   --orange: #e69b39;
@@ -299,6 +302,10 @@ ion-action-sheet.my-ion-action-sheet {
   --width: 100%;
 }
 
+ion-modal {
+  --background: var(--ion-background-color);
+}
+
 ion-modal::part(content) {
   --background: var(--ion-background-color);
   --border-radius: 1rem;
@@ -307,6 +314,10 @@ ion-modal::part(content) {
   --width: 100%;
   position: absolute;
   bottom: -1rem;
+}
+
+ion-modal::part(backdrop) {
+  background: var(--ion-backdrop-color) !important;
 }
 
 ion-select {
@@ -352,7 +363,7 @@ ion-toast::part(button) {
 
 ion-toggle {
   margin: 12px;
-  border: 1px solid var(--black);
+  border: 1px solid var(--white);
 
   --track-background: var(--toggle-background);
   --track-background-checked: var(--toggle-background);
@@ -400,22 +411,32 @@ ion-input.has-focus {
   border-color: var(--blue-primary);
 }
 
-/* iOS Safari specific fixes */
+/* iOS Safari specific fixes - Force theme colors with !important */
 ion-backdrop {
-  background-color: var(--ion-backdrop-color);
+  background-color: var(--ion-backdrop-color) !important;
 }
 
-/* Ensure modals and sheets extend to safe areas on iOS */
+/* Ensure modals and sheets respect theme on iOS */
 ion-modal,
 ion-action-sheet {
   --background: var(--ion-background-color);
 }
 
+ion-modal .modal-wrapper,
+ion-action-sheet .action-sheet-wrapper {
+  background: var(--ion-background-color) !important;
+}
+
 /* Prevent white backgrounds in iOS Safari */
 ion-content::part(background) {
-  background: var(--ion-background-color);
+  background: var(--ion-background-color) !important;
 }
 
 ion-page {
-  background: var(--ion-background-color);
+  background: var(--ion-background-color) !important;
+}
+
+/* Ensure all ion-modal internal elements respect theme */
+ion-modal .ion-page {
+  background: var(--ion-background-color) !important;
 }

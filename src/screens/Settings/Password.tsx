@@ -94,7 +94,7 @@ export default function Password() {
       </Content>
       {successText ? null : (
         <ButtonsOnBottom>
-          <Button onClick={handleContinue} label={label} disabled={newPassword === null || saving} loading={saving} />
+          <Button onClick={handleContinue} label={label} disabled={!newPassword || saving} loading={saving} />
           {wallet.lockedByBiometrics || !isBiometricsSupported() ? null : (
             <Button onClick={registerUserBiometrics} label='Use biometrics' secondary />
           )}

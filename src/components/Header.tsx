@@ -8,6 +8,7 @@ import Text from './Text'
 import FlexRow from './FlexRow'
 import Focusable from './Focusable'
 import { hapticLight } from '../lib/haptics'
+import { showIntercom } from '../lib/intercom'
 
 const KNOWLEDGE_BASE_URL = 'https://support.chimerawallet.com'
 
@@ -34,7 +35,7 @@ export default function Header({ auxAriaLabel, auxFunc, auxText, back, text, aux
 
   const handleSupport = () => {
     hapticLight()
-    window.open(KNOWLEDGE_BASE_URL, '_blank')
+    showIntercom()
   }
 
   const SideButton = (text: string) => (

@@ -45,7 +45,7 @@ video {
 /* end of tailwindcss/base */
 
 html {
-  background-color: #101015;
+  background-color: var(--black-bg);
   /* Ensure background extends to safe areas on iOS */
   min-height: 100vh;
   min-height: -webkit-fill-available;
@@ -59,20 +59,20 @@ body,
 
 body {
   margin: 0;
-  background-color: #101015;
+  background-color: var(--black-bg);
   font-family:
     'Geist', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #fbfbfb;
+  color: var(--white);
   /* Prevent white background on iOS Safari */
   min-height: 100vh;
   min-height: -webkit-fill-available;
 }
 
 #root {
-  background-color: #101015;
+  background-color: var(--black-bg);
 }
 
 * {
@@ -80,16 +80,16 @@ body {
 }
 
 ion-app, ion-content, ion-page, ion-text {
-  color: #fbfbfb;
+  color: var(--white);
   background: transparent;
 }
 
 ion-app {
-  background-color: #101015;
+  background-color: var(--ion-background-color);
 }
 
 svg {
-  color: #fbfbfb;
+  color: var(--white);
 }
 
 .first-letter::first-letter {
@@ -135,8 +135,8 @@ button.reminder-button.action-sheet-button {
   padding: 0;
   border: 1px solid var(--dark50);
   border-radius: 0.25rem;
-  background-color: #e5e5e5;
-  color: var(--color);
+  background-color: var(--reminder-button-bg);
+  color: var(--reminder-button-color);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -149,14 +149,14 @@ button.reminder-button.action-sheet-button {
 }
 
 .ion-palette-dark button.reminder-button.action-sheet-button {
-  background-color: #222;
-  color: #f7fafc;
+  background-color: var(--reminder-button-bg);
+  color: var(--reminder-button-color);
 }
 
 .spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--white);
   border-top: 2px solid transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;

@@ -32,7 +32,14 @@ export default function SelectSheet({
   }
 
   return (
-    <IonModal initialBreakpoint={1} isOpen={isOpen} onDidDismiss={onClose}>
+    <IonModal 
+      initialBreakpoint={1} 
+      isOpen={isOpen} 
+      onDidDismiss={onClose}
+      style={{
+        '--background': 'var(--ion-background-color)',
+      } as React.CSSProperties}
+    >
       <div
         style={{
           borderTop: '1px solid var(--dark50)',

@@ -37,6 +37,7 @@ import CardReservationIcon from './icons/CardReservation'
 import SwapIcon from './icons/Swap'
 import Focusable from './components/Focusable'
 import { useReducedMotion } from './hooks/useReducedMotion'
+import IntercomMessenger from './components/IntercomMessenger'
 
 setupIonicReact()
 
@@ -371,6 +372,7 @@ export default function App() {
           </IonTabs>
         )}
       </IonPage>
+      <IntercomMessenger />
     </IonApp>
   )
 }

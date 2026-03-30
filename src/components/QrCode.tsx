@@ -18,7 +18,7 @@ export default function QrCode({ value }: QrCodeProps) {
       {value ? (
         <div
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--qr-background)',
             borderRadius: '0.5rem',
             padding: '0.5rem',
             maxWidth: '100%',
