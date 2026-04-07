@@ -297,13 +297,22 @@ ion-content::part(scroll) {
 
 ion-action-sheet.my-ion-action-sheet {
   --backdrop-opacity: 0.6;
+  --background: #101015 !important;
   --color: var(--ion-color-dark-rgb);
   --max-width: 100%;
   --width: 100%;
 }
 
+ion-action-sheet.my-ion-action-sheet::part(backdrop) {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+ion-action-sheet.my-ion-action-sheet .action-sheet-container {
+  background: #101015 !important;
+}
+
 ion-modal {
-  --background: var(--ion-background-color);
+  --background: #101015;
 }
 
 ion-modal::part(content) {
@@ -452,4 +461,43 @@ ion-page {
 /* Ensure all ion-modal internal elements respect theme */
 ion-modal .ion-page {
   background: var(--ion-background-color) !important;
+}
+
+/* Sheet modal specific styles for iOS */
+.sheet-modal-dark {
+  --background: #101015 !important;
+  --ion-background-color: #101015 !important;
+  --height: auto;
+  --max-height: 80%;
+}
+
+.sheet-modal-dark::part(backdrop) {
+  background: rgba(0, 0, 0, 0.6) !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.sheet-modal-dark::part(content) {
+  --background: #101015 !important;
+  background: #101015 !important;
+  background-color: #101015 !important;
+  border-top-left-radius: 1rem !important;
+  border-top-right-radius: 1rem !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  height: auto !important;
+  max-height: 80% !important;
+}
+
+.sheet-modal-dark::part(handle) {
+  display: none !important;
+}
+
+/* iOS Safari - force dark on all modal inner wrappers */
+.sheet-modal-dark .modal-wrapper,
+.sheet-modal-dark ion-content,
+.sheet-modal-dark .ion-page {
+  --background: #101015 !important;
+  background: #101015 !important;
+  background-color: #101015 !important;
 }

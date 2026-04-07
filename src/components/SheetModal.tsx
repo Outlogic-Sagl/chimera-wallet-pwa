@@ -10,24 +10,24 @@ interface SheetModalProps {
 export default function SheetModal({ children, isOpen, onClose }: SheetModalProps) {
   return (
     <IonModal 
-      initialBreakpoint={1} 
       isOpen={isOpen} 
       onDidDismiss={onClose}
-      style={{
-        '--background': '#101015',
-      } as React.CSSProperties}
+      backdropDismiss
+      showBackdrop
+      className="sheet-modal-dark"
     >
       <div
         style={{
           backgroundColor: '#101015',
           borderTop: '1px solid var(--dark50)',
-          borderRadius: '1rem',
+          borderTopLeftRadius: '1rem',
+          borderTopRightRadius: '1rem',
           height: '100%',
           padding: '1rem',
-          paddingBottom: '2rem',
+          paddingBottom: 'calc(3rem + env(safe-area-inset-bottom))',
         }}
       >
-        <div style={{ cursor: 'pointer', position: 'absolute', right: '1rem', top: '1rem' }} onClick={onClose}>
+        <div style={{ cursor: 'pointer', position: 'absolute', right: '1rem', top: '1rem', zIndex: 10 }} onClick={onClose}>
           <CloseIcon />
         </div>
         {children}

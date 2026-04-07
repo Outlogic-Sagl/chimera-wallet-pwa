@@ -33,21 +33,21 @@ export default function SelectSheet({
 
   return (
     <IonModal 
-      initialBreakpoint={1} 
       isOpen={isOpen} 
       onDidDismiss={onClose}
-      style={{
-        '--background': 'var(--ion-background-color)',
-      } as React.CSSProperties}
+      backdropDismiss
+      showBackdrop
+      className="sheet-modal-dark"
     >
       <div
         style={{
           borderTop: '1px solid var(--dark50)',
-          borderRadius: '1rem',
+          borderTopLeftRadius: '1rem',
+          borderTopRightRadius: '1rem',
           height: '100%',
           padding: '1rem',
-          paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))',
-          backgroundColor: 'var(--ion-background-color)',
+          paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))',
+          backgroundColor: '#101015',
         }}
       >
         {/* Header */}
