@@ -14,6 +14,9 @@ export default defineConfig({
     }),
     process.env.HTTPS === 'true' && basicSsl(),
   ].filter(Boolean),
+  define: {
+    __BUILD_TIME__: JSON.stringify(Date.now().toString()),
+  },
   server: {
     port: 3002,
     host: true,

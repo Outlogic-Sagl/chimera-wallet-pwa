@@ -14390,7 +14390,7 @@ function hw(e, t, n) {
 }
 const If = new uw();
 If.start().catch(console.error);
-const kf = "arkade-cache-v1";
+const pw = "__BUILD_TIME__", kf = `chimera-wallet-cache-${pw}`;
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(kf)), self.skipWaiting();
 });
@@ -14399,18 +14399,18 @@ self.addEventListener("activate", (e) => {
     caches.keys().then((t) => Promise.all(
       t.map((n) => {
         if (n !== kf)
-          return caches.delete(n);
+          return console.log("Deleting old cache:", n), caches.delete(n);
       })
-    ))
-  ), self.clients.matchAll({
-    includeUncontrolled: !0,
-    type: "window"
-  }).then((t) => {
-    t.forEach((n) => {
-      n.postMessage({ type: "RELOAD_PAGE" });
-    });
-  }), self.clients.claim();
+    )).then(() => self.clients.matchAll({
+      includeUncontrolled: !0,
+      type: "window"
+    })).then((t) => {
+      t.forEach((n) => {
+        console.log("Sending reload message to client"), n.postMessage({ type: "RELOAD_PAGE" });
+      });
+    })
+  ), self.clients.claim();
 });
 self.addEventListener("message", (e) => {
-  e.data && e.data.type === "RELOAD_WALLET" && e.waitUntil(If.reload().catch(console.error));
+  e.data && e.data.type === "RELOAD_WALLET" && e.waitUntil(If.reload().catch(console.error)), e.data && e.data.type === "SKIP_WAITING" && self.skipWaiting();
 });

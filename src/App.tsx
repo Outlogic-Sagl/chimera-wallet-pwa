@@ -38,6 +38,7 @@ import SwapIcon from './icons/Swap'
 import Focusable from './components/Focusable'
 import { useReducedMotion } from './hooks/useReducedMotion'
 import IntercomMessenger from './components/IntercomMessenger'
+import { setupPeriodicUpdateCheck } from './lib/serviceWorkerUpdate'
 
 setupIonicReact()
 
@@ -114,6 +115,13 @@ export default function App() {
       .then((res) => setIsCapable(res.isSupported))
       .catch(() => setIsCapable(false))
       .finally(() => setJsCapabilitiesChecked(true))
+  }, [])
+
+  // Setup periodic service worker update checks
+  useEffect(() => {
+    // Check for updates every 60 minutes
+    const cleanup = setupPeriodicUpdateCheck(60)
+    return cleanup
   }, [])
 
   // Global escape key to go back to wallet

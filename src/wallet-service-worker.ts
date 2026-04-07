@@ -3,7 +3,9 @@ import { Worker } from '@arkade-os/sdk'
 const worker = new Worker()
 worker.start().catch(console.error)
 
-const CACHE_NAME = 'arkade-cache-v1'
+// Use build timestamp to ensure cache invalidation on each deployment
+const CACHE_VERSION = '__BUILD_TIME__' // Will be replaced during build
+const CACHE_NAME = `chimera-wallet-cache-${CACHE_VERSION}`
 declare const self: ServiceWorkerGlobalScope
 
 // The first event a service worker gets is install.
@@ -22,27 +24,27 @@ self.addEventListener('install', (event: ExtendableEvent) => {
 self.addEventListener('activate', (event: ExtendableEvent) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
+      // Delete ALL old caches, keeping only the current one
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName === CACHE_NAME) return
+          console.log('Deleting old cache:', cacheName)
           return caches.delete(cacheName)
         }),
       )
-    }),
-  )
-  // some weird stuff happens if we don't reload the page when
-  // the service worker is activated, so we force a reload
-  // by sending a message to all clients to reload the page
-  self.clients
-    .matchAll({
-      includeUncontrolled: true,
-      type: 'window',
-    })
-    .then((clients) => {
+    }).then(() => {
+      // Force reload all clients after cache cleanup
+      return self.clients.matchAll({
+        includeUncontrolled: true,
+        type: 'window',
+      })
+    }).then((clients) => {
       clients.forEach((client) => {
+        console.log('Sending reload message to client')
         client.postMessage({ type: 'RELOAD_PAGE' })
       })
-    })
+    }),
+  )
   self.clients.claim() // take control of clients immediately
 })
 
@@ -84,5 +86,10 @@ self.addEventListener('message', (event: ExtendableMessageEvent) => {
   if (event.data && event.data.type === 'RELOAD_WALLET') {
     // reload the wallet when the service worker receives a message to reload
     event.waitUntil(worker.reload().catch(console.error))
+  }
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    // Skip waiting and activate immediately when requested
+    self.skipWaiting()
   }
 })
