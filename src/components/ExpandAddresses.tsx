@@ -55,8 +55,12 @@ export default function ExpandAddresses({
   }
 
   const handleExpand = () => {
-    if (!expand && bip21uri) {
-      handleCopy(bip21uri)
+    if (!expand) {
+      // Copy first available address when expanding
+      const firstAddress = boardingAddr || offchainAddr || invoice
+      if (firstAddress) {
+        handleCopy(firstAddress)
+      }
     } else {
       hapticSubtle()
     }
@@ -95,7 +99,6 @@ export default function ExpandAddresses({
       {expand ? (
         <div style={{ padding: '1rem 0 0 0.5rem', width: '100%' }}>
           <FlexCol gap='0.21rem'>
-            {bip21uri ? <ExpandLine testId='bip21' title='BIP21' value={bip21uri} /> : null}
             {boardingAddr ? <ExpandLine testId='btc' title='BTC address' value={boardingAddr} /> : null}
             {offchainAddr ? <ExpandLine testId='ark' title='Ark address' value={offchainAddr} /> : null}
             {invoice ? <ExpandLine testId='invoice' title='Lightning invoice' value={invoice} /> : null}
