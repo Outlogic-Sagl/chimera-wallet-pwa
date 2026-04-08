@@ -8,6 +8,7 @@ import { NavigationContext, Pages } from '../../providers/navigation'
 import Focusable from '../../components/Focusable'
 import LendasatIcon from './Lendasat/LendasatIcon'
 import LendaswapIcon from './Lendaswap/LendaswapIcon'
+import FujiMoneyIcon from '../../icons/FujiMoney'
 import { hapticSubtle } from '../../lib/haptics'
 
 interface AppProps {
@@ -178,7 +179,7 @@ export default function Apps() {
             />
             <App 
               name='Fuji Money' 
-              image='/images/apps/PriceAlerts.svg'
+              icon={<FujiMoneyIcon />}
               backgroundImage='/images/apps_backgrounds/price_alerts.png'
             />
           </div>
