@@ -38,7 +38,7 @@ export default function InitSuccess() {
         />
       </Content>
       <ButtonsOnBottom>
-        <Button onClick={() => navigate(Pages.InitConnect)} label='Go to wallet' />
+        <Button onClick={() => navigate(Pages.InitBiometric)} label='Go to wallet' />
       </ButtonsOnBottom>
     </>
   )

@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Header from './Header'
 import Content from '../../components/Content'
 import Padded from '../../components/Padded'
@@ -7,29 +7,69 @@ import { TextSecondary } from '../../components/Text'
 import Toggle from '../../components/Toggle'
 import { WalletContext } from '../../providers/wallet'
 import { isBiometricsSupported, registerUser } from '../../lib/biometrics'
-import { consoleLog } from '../../lib/logs'
+import { consoleError } from '../../lib/logs'
 import { hapticSubtle } from '../../lib/haptics'
+import { getPrivateKey, setPrivateKey, noUserDefinedPassword, isValidPassword } from '../../lib/privateKey'
+import { defaultPassword } from '../../lib/constants'
+import NeedsPassword from '../../components/NeedsPassword'
 
 export default function Biometric() {
   const { updateWallet, wallet } = useContext(WalletContext)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [authenticated, setAuthenticated] = useState(false)
+  const [error, setError] = useState('')
 
   const biometricsSupported = isBiometricsSupported()
   const biometricsEnabled = wallet.lockedByBiometrics || false
 
-  const handleToggle = () => {
+  // Auto-detect if using default password
+  useEffect(() => {
+    noUserDefinedPassword().then((noPassword) => {
+      if (noPassword) setCurrentPassword(defaultPassword)
+    })
+  }, [])
+
+  // Validate password when set
+  useEffect(() => {
+    if (!currentPassword) return
+    isValidPassword(currentPassword).then((isValid) => {
+      setError(isValid ? '' : 'Invalid password')
+      setAuthenticated(isValid)
+    })
+  }, [currentPassword])
+
+  const handleToggle = async () => {
     hapticSubtle()
     
     if (biometricsEnabled) {
-      // Disable biometrics
-      updateWallet({ ...wallet, lockedByBiometrics: false, passkeyId: undefined })
+      // Disable biometrics - re-encrypt with default password
+      try {
+        const privateKey = await getPrivateKey(currentPassword)
+        await setPrivateKey(privateKey, defaultPassword)
+        updateWallet({ ...wallet, lockedByBiometrics: false, passkeyId: undefined })
+        setCurrentPassword(defaultPassword)
+      } catch (err) {
+        consoleError(err, 'Failed to disable biometrics')
+        setError('Failed to disable biometrics. Please try again.')
+      }
     } else {
-      // Enable biometrics
-      registerUser()
-        .then(({ passkeyId }) => {
-          updateWallet({ ...wallet, lockedByBiometrics: true, passkeyId })
-        })
-        .catch(consoleLog)
+      // Enable biometrics - re-encrypt with biometric password
+      try {
+        const { password: biometricPassword, passkeyId } = await registerUser()
+        const privateKey = await getPrivateKey(currentPassword)
+        await setPrivateKey(privateKey, biometricPassword)
+        updateWallet({ ...wallet, lockedByBiometrics: true, passkeyId })
+        setCurrentPassword(biometricPassword)
+      } catch (err) {
+        consoleError(err, 'Failed to enable biometrics')
+        setError('Failed to enable biometrics. Please try again.')
+      }
     }
+  }
+
+  // Require authentication before showing toggle
+  if (!authenticated) {
+    return <NeedsPassword error={error} onPassword={setCurrentPassword} />
   }
 
   return (

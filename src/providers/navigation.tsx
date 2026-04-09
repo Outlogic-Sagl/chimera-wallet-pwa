@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useCallback, useEffect, useRef, useState } from 'react'
 import Init from '../screens/Init/Init'
+import InitBiometric from '../screens/Init/Biometric'
 import InitConnect from '../screens/Init/Connect'
 import InitRestore from '../screens/Init/Restore'
 import InitPassword from '../screens/Init/Password'
@@ -62,6 +63,7 @@ export enum Pages {
   Init,
   InitRestore,
   InitPassword,
+  InitBiometric,
   InitConnect,
   InitSuccess,
   Loading,
@@ -115,6 +117,7 @@ const pageTab = {
   [Pages.Init]: Tabs.None,
   [Pages.InitRestore]: Tabs.None,
   [Pages.InitPassword]: Tabs.None,
+  [Pages.InitBiometric]: Tabs.None,
   [Pages.InitConnect]: Tabs.None,
   [Pages.InitSuccess]: Tabs.None,
   [Pages.Loading]: Tabs.None,
@@ -183,6 +186,8 @@ export const pageComponent = (page: Pages, navigationData?: Record<string, unkno
       return <InitRestore />
     case Pages.InitPassword:
       return <InitPassword />
+    case Pages.InitBiometric:
+      return <InitBiometric />
     case Pages.InitSuccess:
       return <InitSuccess />
     case Pages.Loading:

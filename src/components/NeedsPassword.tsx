@@ -22,7 +22,12 @@ export default function NeedsPassword({ error, onPassword }: NeedsPasswordProps)
   const { wallet } = useContext(WalletContext)
   const [password, setPassword] = useState('')
 
-  const handleBiometrics = () => authenticateUser(wallet.passkeyId).then(onPassword).catch(consoleError)
+  const handleBiometrics = () => {
+    authenticateUser(wallet.passkeyId)
+      .then(onPassword)
+      .catch((err) => consoleError(err, 'Biometric authentication failed'))
+  }
+
   const handleChange = (ev: any) => setPassword(ev.target.value)
   const handleClick = () => onPassword(password)
 

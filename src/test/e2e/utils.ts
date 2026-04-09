@@ -9,6 +9,15 @@ export async function createWallet(page: Page): Promise<void> {
   await page.getByText('+ Create wallet').click()
   await page.waitForSelector('text=Your new wallet is live!', { state: 'visible' })
   await page.getByText('Go to wallet').click()
+  
+  // Handle biometric authentication page
+  // In test environments, biometrics are typically not supported, so "Continue" button appears
+  const continueButton = page.getByRole('button', { name: 'Continue' })
+  await continueButton.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+  if (await continueButton.isVisible()) {
+    await continueButton.click()
+  }
+  
   const maybeLater = page.getByRole('button', { name: 'Maybe later' })
   await maybeLater.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
   if (await maybeLater.isVisible()) {
@@ -114,6 +123,15 @@ async function restoreWallet(page: Page, nsec: string): Promise<void> {
   await page.locator('ion-input[name="private-key"] input').fill(nsec)
   await page.getByText('Continue').click()
   await page.getByText('Go to wallet').click()
+  
+  // Handle biometric authentication page
+  // In test environments, biometrics are typically not supported, so "Continue" button appears
+  const continueButton = page.getByRole('button', { name: 'Continue' })
+  await continueButton.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+  if (await continueButton.isVisible()) {
+    await continueButton.click()
+  }
+  
   await page.getByText('Maybe later').click()
 }
 

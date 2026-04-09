@@ -19,10 +19,13 @@ import { SettingsOptions } from '../../lib/types'
 export default function Lock() {
   const { setOption } = useContext(OptionsContext)
   const { navigate } = useContext(NavigationContext)
-  const { lockWallet } = useContext(WalletContext)
+  const { lockWallet, wallet } = useContext(WalletContext)
 
   const [error, setError] = useState('')
   const [noPassword, setNoPassword] = useState(true)
+
+  const biometricsEnabled = wallet.lockedByBiometrics || false
+  const canLock = biometricsEnabled || !noPassword
 
   useEffect(() => {
     noUserDefinedPassword().then(setNoPassword)
@@ -50,17 +53,21 @@ export default function Lock() {
           <ErrorMessage error={Boolean(error)} text={error} />
           <CenterScreen>
             <LockIcon big />
-            <Text centered>{noPassword ? 'No password defined' : 'Lock your wallet'}</Text>
+            <Text centered>
+              {!canLock ? 'No password or biometrics defined' : 'Lock your wallet'}
+            </Text>
             <TextSecondary centered>
-              {noPassword
-                ? 'You need to set a password to lock.'
-                : "After locking you'll need to re-enter your password to unlock."}
+              {!canLock
+                ? 'You need to set a password or enable biometrics to lock.'
+                : biometricsEnabled
+                  ? "After locking you'll need to authenticate with biometrics to unlock."
+                  : "After locking you'll need to re-enter your password to unlock."}
             </TextSecondary>
           </CenterScreen>
         </Padded>
       </Content>
       <ButtonsOnBottom>
-        {noPassword ? (
+        {!canLock ? (
           <Button onClick={handleSetPassword} label='Set Password' />
         ) : (
           <Button onClick={handleLock} label='Lock Wallet' />
