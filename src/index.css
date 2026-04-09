@@ -293,23 +293,19 @@ button.reminder-button.action-sheet-button {
   overflow: hidden;
 }
 
-/* Intercom messenger safe area adjustments */
-iframe[name*="intercom-messenger-frame"] {
-  top: env(safe-area-inset-top, 0px) !important;
-  height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
-  max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
-}
-
-/* Intercom container adjustments */
-#intercom-container {
-  top: env(safe-area-inset-top, 0px) !important;
-  height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
-}
-
-/* Intercom messenger frame wrapper */
-.intercom-messenger-frame,
-div[class*="intercom"][class*="Frame"] {
-  top: env(safe-area-inset-top, 0px) !important;
-  height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
-  max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+/* Intercom messenger safe area adjustments for iOS */
+@supports (-webkit-touch-callout: none) {
+  /* iOS only */
+  .intercom-messenger-frame,
+  iframe[name*="intercom-messenger"] {
+    transform: translateY(env(safe-area-inset-top, 0px)) !important;
+    height: calc(100% - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(90dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+  }
+  
+  #intercom-container,
+  .intercom-namespace .intercom-app > div {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+  }
 }
