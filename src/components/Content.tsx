@@ -17,7 +17,7 @@ export default function Content({ children }: ContentProps) {
   return (
     <IonContent ref={contentRef}>
       <Refresher />
-      <div style={{ height: '100%', paddingTop: '2rem' }}>{children}</div>
+      <div style={{ height: '100%', paddingTop: '1rem' }}>{children}</div>
     </IonContent>
   )
 }

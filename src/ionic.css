@@ -237,6 +237,12 @@ ion-app ion-header {
   & ion-grid {
     margin: auto;
   }
+  & ion-title {
+    position: static;
+    padding: 0;
+    height: auto;
+    text-align: center;
+  }
 }
 
 .ion-page {
@@ -248,12 +254,16 @@ ion-tab-bar {
   border-top: 1px solid var(--dark20);
   width: 100%;
   background-color: var(--ion-tabbar-background-color);
+  min-height: 70px;
+  padding-bottom: 0.25rem;
   /* Ionic handles safe areas automatically via --ion-safe-area-bottom */
   & ion-tab-button {
     --background: var(--ion-tabbar-background-color);
     --color: var(--grey);
     --color-selected: var(--green);
     max-width: none;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
     &:hover,
     &:hover svg,
     &.tab-selected,

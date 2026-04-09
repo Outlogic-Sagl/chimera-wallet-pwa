@@ -292,3 +292,24 @@ button.reminder-button.action-sheet-button {
 .tabs-inner {
   overflow: hidden;
 }
+
+/* Intercom messenger safe area adjustments */
+iframe[name*="intercom-messenger-frame"] {
+  top: env(safe-area-inset-top, 0px) !important;
+  height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+  max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Intercom container adjustments */
+#intercom-container {
+  top: env(safe-area-inset-top, 0px) !important;
+  height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Intercom messenger frame wrapper */
+.intercom-messenger-frame,
+div[class*="intercom"][class*="Frame"] {
+  top: env(safe-area-inset-top, 0px) !important;
+  height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+  max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+}
