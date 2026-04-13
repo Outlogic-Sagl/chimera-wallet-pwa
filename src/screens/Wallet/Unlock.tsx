@@ -17,6 +17,7 @@ export default function Unlock() {
   const [tried, setTried] = useState(false)
   const [unlocked, setUnlocked] = useState(false)
   const [shouldAutoUnlock, setShouldAutoUnlock] = useState(false)
+  const [unlocking, setUnlocking] = useState(false)
 
   // Check if we should auto-unlock (only if no custom password and no biometrics)
   useEffect(() => {
@@ -37,27 +38,42 @@ export default function Unlock() {
     // Only attempt unlock if we should auto-unlock OR user has entered a password
     if (!shouldAutoUnlock && !password) return
     
+    setUnlocking(true)
+    setError('')
+    
     const pass = password ? password : defaultPassword
     getPrivateKey(pass)
       .then(initWallet)
       .then(() => setUnlocked(true))
       .catch((err) => {
         setTried(true)
+        setUnlocking(false)
         if (password) {
           consoleError(err, 'error unlocking wallet')
           setError('Invalid password')
+        } else {
+          // Auto-unlock failed, show unlock screen
+          consoleError(err, 'Auto-unlock failed')
         }
       })
   }, [password, shouldAutoUnlock, initWallet])
 
   useEffect(() => {
-    if (unlocked && dataReady) navigate(Pages.Wallet)
+    if (unlocked && dataReady) {
+      setUnlocking(false)
+      navigate(Pages.Wallet)
+    }
   }, [unlocked, dataReady, navigate])
+
+  // Show loading spinner while unlocking if unlocked but waiting for data
+  if (unlocking || (unlocked && !dataReady)) {
+    return <Loading text='Unlocking wallet...' />
+  }
 
   return tried ? (
     <>
       <Header text='Unlock' />
-      <NeedsPassword error={error} onPassword={setPassword} />
+      <NeedsPassword error={error} onPassword={setPassword} loading={unlocking} />
     </>
   ) : (
     <Loading />

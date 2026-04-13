@@ -18,12 +18,14 @@ interface AppProps {
   link?: string
   page?: Pages
   backgroundImage?: string
+  comingSoon?: boolean
 }
 
-function App({ icon, image, link, name, page, backgroundImage }: AppProps) {
+function App({ icon, image, link, name, page, backgroundImage, comingSoon }: AppProps) {
   const { navigate } = useContext(NavigationContext)
 
   const handleClick = () => {
+    if (comingSoon) return
     hapticSubtle()
     if (typeof page !== 'undefined') return navigate(page)
     if (link) window.open(link, '_blank')
@@ -81,6 +83,21 @@ function App({ icon, image, link, name, page, backgroundImage }: AppProps) {
             
             {/* Title */}
             <Text bold centered>{name}</Text>
+            
+            {/* Coming Soon tag */}
+            {comingSoon ? (
+              <div style={{
+                marginTop: 4,
+                padding: '2px 8px',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                borderRadius: 12,
+                fontSize: 10,
+                color: '#fff',
+                fontWeight: 500,
+              }}>
+                Coming Soon
+              </div>
+            ) : null}
           </div>
         </div>
       </Shadow>
@@ -181,6 +198,7 @@ export default function Apps() {
               name='Fuji Money' 
               icon={<FujiMoneyIcon />}
               backgroundImage='/images/apps_backgrounds/price_alerts.png'
+              comingSoon
             />
           </div>
         </Padded>

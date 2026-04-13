@@ -65,7 +65,7 @@ function settingsContent(option: SettingsOptions): JSX.Element {
     case SettingsOptions.Reset:
       return <Reset />
     case SettingsOptions.SecretPhrase:
-      return <Backup /> // Show secret phrase uses Backup page
+      return <Backup /> // Show secret key uses Backup page
     case SettingsOptions.Server:
       return <Server />
     case SettingsOptions.Support:

@@ -70,7 +70,7 @@ export enum SettingsOptions {
   Notes = 'notes',
   Password = 'change password',
   Reset = 'reset wallet',
-  SecretPhrase = 'show secret phrase',
+  SecretPhrase = 'Show secret key',
   Server = 'server',
   Support = 'support',
   Vtxos = 'coin control',

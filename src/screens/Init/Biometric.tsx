@@ -81,7 +81,10 @@ export default function InitBiometric() {
       </Content>
       <ButtonsOnBottom>
         {biometricsSupported ? (
-          <Button onClick={handleEnableBiometrics} label='Enable Biometrics' />
+          <>
+            <Button onClick={handleEnableBiometrics} label='Enable Biometrics' />
+            <Button onClick={handleContinue} label='Use password instead' secondary />
+          </>
         ) : (
           <Button onClick={handleContinue} label='Continue' />
         )}

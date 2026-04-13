@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import Text from './Text'
+import Text, { TextSecondary } from './Text'
 import ErrorMessage from './Error'
 import Button from './Button'
 import Padded from './Padded'
@@ -16,31 +16,34 @@ import LockIcon from '../icons/Lock'
 interface NeedsPasswordProps {
   error: string
   onPassword: (password: string) => void
+  loading?: boolean
 }
 
-export default function NeedsPassword({ error, onPassword }: NeedsPasswordProps) {
+export default function NeedsPassword({ error, onPassword, loading = false }: NeedsPasswordProps) {
   const { wallet } = useContext(WalletContext)
   const [password, setPassword] = useState('')
+  const [usePasswordFallback, setUsePasswordFallback] = useState(false)
 
   const handleBiometrics = () => {
     authenticateUser(wallet.passkeyId)
       .then(onPassword)
-      .catch((err) => consoleError(err, 'Biometric authentication failed'))
+      .catch((err) => {
+        consoleError(err, 'Biometric authentication failed')
+        // Automatically show password fallback on biometric failure
+        setUsePasswordFallback(true)
+      })
   }
 
   const handleChange = (ev: any) => setPassword(ev.target.value)
   const handleClick = () => onPassword(password)
 
+  const showPasswordInput = !wallet.lockedByBiometrics || usePasswordFallback
+
   return (
     <>
       <Content>
         <Padded>
-          {wallet.lockedByBiometrics ? (
-            <CenterScreen onClick={handleBiometrics}>
-              <LockIcon big />
-              <Text centered>Unlock with your passkey</Text>
-            </CenterScreen>
-          ) : (
+          {showPasswordInput ? (
             <FlexCol gap='1rem'>
               <InputPassword
                 focus
@@ -50,12 +53,34 @@ export default function NeedsPassword({ error, onPassword }: NeedsPasswordProps)
                 placeholder='password'
               />
               <ErrorMessage text={error} error={Boolean(error)} />
+              {wallet.lockedByBiometrics && usePasswordFallback ? (
+                <TextSecondary wrap>
+                  Note: If biometrics was enabled, you'll need to disable it from Settings first or restore your wallet using your private key.
+                </TextSecondary>
+              ) : null}
             </FlexCol>
+          ) : (
+            <CenterScreen onClick={handleBiometrics}>
+              <LockIcon big />
+              <Text centered>Unlock with your passkey</Text>
+            </CenterScreen>
           )}
         </Padded>
       </Content>
       <ButtonsOnBottom>
-        <Button onClick={wallet.lockedByBiometrics ? handleBiometrics : handleClick} label='Unlock wallet' />
+        {showPasswordInput ? (
+          <>
+            <Button onClick={handleClick} label='Unlock wallet' loading={loading} disabled={loading} />
+            {wallet.lockedByBiometrics ? (
+              <Button onClick={() => setUsePasswordFallback(false)} label='Use biometrics' secondary disabled={loading} />
+            ) : null}
+          </>
+        ) : (
+          <>
+            <Button onClick={handleBiometrics} label='Unlock using biometrics' loading={loading} disabled={loading} />
+            <Button onClick={() => setUsePasswordFallback(true)} label='Use password instead' secondary disabled={loading} />
+          </>
+        )}
       </ButtonsOnBottom>
     </>
   )
