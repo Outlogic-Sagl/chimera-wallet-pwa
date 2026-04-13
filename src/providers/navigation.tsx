@@ -41,6 +41,7 @@ import AppAddressBookForm from '../screens/Apps/AddressBook/Form'
 import AppAddressBookContact from '../screens/Apps/AddressBook/ContactDetail'
 import Unavailable from '../screens/Wallet/Unavailable'
 import Verification from '../screens/Settings/Verification'
+import { trackPageView } from '../lib/analytics'
 
 export type NavigationDirection = 'forward' | 'back' | 'none'
 
@@ -319,6 +320,11 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [pop])
 
+  // Track initial page view
+  useEffect(() => {
+    trackPageView(Pages[screen])
+  }, [])
+
   const goBack = useCallback(() => {
     history.back()
   }, [])
@@ -333,6 +339,9 @@ export const NavigationProvider = ({ children }: { children: ReactNode }) => {
     setScreen(page)
     setTab(nextTab)
     setNavigationData(data)
+    
+    // Track page view for analytics
+    trackPageView(Pages[page])
   }
 
   return (
