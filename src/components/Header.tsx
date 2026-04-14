@@ -36,27 +36,36 @@ export default function Header({ auxAriaLabel, auxFunc, auxText, back, text, aux
   const handleSupport = () => {
     hapticLight()
     
-    // Try to show Intercom messenger
-    showIntercom()
-    
-    // On iOS, if Intercom doesn't open after a delay, open knowledge base as fallback
-    const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) || 
-                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-    
-    if (isIos) {
-      setTimeout(() => {
-        // Check if Intercom messenger is visible
-        const intercomFrame = document.querySelector('iframe[name*="intercom"]')
-        const isVisible = intercomFrame && 
-                         window.getComputedStyle(intercomFrame).display !== 'none' &&
-                         window.getComputedStyle(intercomFrame).visibility !== 'hidden'
-        
-        // If Intercom isn't visible, open knowledge base as fallback
-        if (!isVisible) {
-          console.log('Intercom not visible on iOS, opening knowledge base')
-          window.open(KNOWLEDGE_BASE_URL, '_blank')
-        }
-      }, 2000)
+    // Try to show Intercom
+    try {
+      showIntercom()
+      
+      // On iOS, verify Intercom actually opened after a brief moment
+      // If not, provide fallback to knowledge base
+      const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) || 
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+      
+      if (isIos) {
+        // Use requestAnimationFrame to check after next paint
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            // Check if Intercom messenger is actually visible
+            const intercomContainer = document.querySelector('#intercom-container')
+            const intercomFrame = document.querySelector('iframe[name*="intercom"]')
+            const isVisible = (intercomContainer || intercomFrame) &&
+                             ((intercomContainer && window.getComputedStyle(intercomContainer).display !== 'none') ||
+                              (intercomFrame && window.getComputedStyle(intercomFrame).display !== 'none'))
+            
+            if (!isVisible) {
+              console.log('Intercom not available on iOS, opening knowledge base')
+              window.open(KNOWLEDGE_BASE_URL, '_blank', 'noopener,noreferrer')
+            }
+          }, 1500)
+        })
+      }
+    } catch (error) {
+      console.error('Failed to show Intercom, opening knowledge base:', error)
+      window.open(KNOWLEDGE_BASE_URL, '_blank', 'noopener,noreferrer')
     }
   }
 

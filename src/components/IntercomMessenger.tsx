@@ -4,10 +4,14 @@ import { initializeIntercom, shutdownIntercom } from '../lib/intercom'
 const IntercomMessenger = () => {
   useEffect(() => {
     // Initialize Intercom when component mounts
-    initializeIntercom()
+    // Use a small delay to ensure DOM is fully ready
+    const timeoutId = setTimeout(() => {
+      initializeIntercom()
+    }, 100)
 
     // Cleanup function to shutdown Intercom when component unmounts
     return () => {
+      clearTimeout(timeoutId)
       shutdownIntercom()
     }
   }, [])
