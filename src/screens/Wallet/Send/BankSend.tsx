@@ -22,6 +22,7 @@ import InlineAmountInput from '../../../components/InlineAmountInput'
 import BankTransferValidationMessages from '../../../components/BankTransferValidation'
 import { type AssetSymbol } from '../../../lib/assets'
 import { TRANSFER_METHOD, type TransferMethod } from '../../../lib/transferMethods'
+import TransactionsIcon from '../../../icons/Transactions'
 import {
   BankCircuitSelector,
   BankCurrencySelector,
@@ -30,6 +31,7 @@ import { NavigationContext, Pages } from '../../../providers/navigation'
 import { FlowContext } from '../../../providers/flow'
 import { WalletContext } from '../../../providers/wallet'
 import { createBankWithdraw, ChimeraOrder } from '../../../providers/chimera'
+import { addOrderToHistory } from '../../../lib/bankOrderHistory'
 import { useBankTransferValidation } from '../../../hooks/useBankTransferValidation'
 import {
   getBankTransferConfigSync,
@@ -43,7 +45,13 @@ import { getUserEmailForBankTransfer } from '../../../lib/kyc'
 
 export default function BankSend() {
   const { navigate, goBack } = useContext(NavigationContext)
-  const { bankSendInfo, setBankSendInfo, sendInfo, setSendInfo } = useContext(FlowContext)
+  const { 
+    bankSendInfo, 
+    setBankSendInfo, 
+    sendInfo, 
+    setSendInfo,
+    setCurrentBankOrderType,
+  } = useContext(FlowContext)
   const { balance } = useContext(WalletContext)
 
   const bankConfig = getBankTransferConfigSync()
@@ -70,6 +78,10 @@ export default function BankSend() {
   // Validation
   const numAmount = amount
   const validation = useBankTransferValidation({ amount: numAmount, currency })
+
+  const handleOrderHistory = () => {
+    navigate(Pages.BankOrderHistory)
+  }
 
   // Update circuit when currency changes
   useEffect(() => {
@@ -140,7 +152,7 @@ export default function BankSend() {
       const response = await createBankWithdraw({
         email: getUserEmailForBankTransfer(),
         fromAmount: numAmount,
-        fromAsset: 'BTC',
+        fromAsset: 'BTC-ARK',
         toAsset: currency,
         bankData,
       })
@@ -153,6 +165,9 @@ export default function BankSend() {
           bankData,
           order: response.order,
         })
+        // Track this as the current order and add to history
+        setCurrentBankOrderType('send')
+        addOrderToHistory(response.order, 'send')
         // Navigate to order status page
         navigate(Pages.BankOrderStatus)
       }
@@ -340,7 +355,7 @@ export default function BankSend() {
 
   return (
     <>
-      <Header text='Send' back={goBack} />
+      <Header text='Send' back={goBack} auxIcon={<TransactionsIcon />} auxFunc={handleOrderHistory} auxAriaLabel='View order history' />
       <Content>
         <Padded>
           <FlexCol gap='1.5rem'>

@@ -26,6 +26,7 @@ import { prettyNumber } from '../../../lib/format'
 import WhenIcon from '../../../icons/When'
 import FeesIcon from '../../../icons/Fees'
 import InfoIcon from '../../../icons/Info'
+import TransactionsIcon from '../../../icons/Transactions'
 import {
   SepaDataView,
   SwiftDataView,
@@ -38,6 +39,7 @@ import { FlowContext } from '../../../providers/flow'
 import { WalletContext } from '../../../providers/wallet'
 import { createBankDeposit, ChimeraOrder } from '../../../providers/chimera'
 import { getReceivingAddresses } from '../../../lib/asp'
+import { addOrderToHistory } from '../../../lib/bankOrderHistory'
 import { useBankTransferValidation } from '../../../hooks/useBankTransferValidation'
 import {
   getBankTransferConfigSync,
@@ -49,7 +51,13 @@ import { getUserEmailForBankTransfer } from '../../../lib/kyc'
 
 export default function BankReceive() {
   const { navigate, goBack } = useContext(NavigationContext)
-  const { bankRecvInfo, setBankRecvInfo, recvInfo, setRecvInfo } = useContext(FlowContext)
+  const { 
+    bankRecvInfo, 
+    setBankRecvInfo, 
+    recvInfo, 
+    setRecvInfo,
+    setCurrentBankOrderType,
+  } = useContext(FlowContext)
   const { svcWallet } = useContext(WalletContext)
 
   const bankConfig = getBankTransferConfigSync()
@@ -72,6 +80,10 @@ export default function BankReceive() {
   // Validation
   const numAmount = amount
   const validation = useBankTransferValidation({ amount: numAmount, currency })
+
+  const handleOrderHistory = () => {
+    navigate(Pages.BankOrderHistory)
+  }
 
   // Load ark address on mount
   useEffect(() => {
@@ -115,7 +127,7 @@ export default function BankReceive() {
         email: getUserEmailForBankTransfer(),
         from_amount: numAmount,
         from_asset: currency,
-        to_asset: 'BTC',
+        to_asset: 'BTC-ARK',
         destination_address: arkAddress,
       })
 
@@ -133,6 +145,9 @@ export default function BankReceive() {
           amount: numAmount,
           order: response.order,
         })
+        // Track this as the current order and add to history
+        setCurrentBankOrderType('receive')
+        addOrderToHistory(response.order, 'receive')
       } else {
         setError('Failed to create order - no order returned')
       }
@@ -149,6 +164,7 @@ export default function BankReceive() {
 
   const handleViewStatus = () => {
     if (order) {
+      setCurrentBankOrderType('receive')
       setBankRecvInfo({ ...bankRecvInfo, order })
       navigate(Pages.BankOrderStatus)
     }
@@ -161,7 +177,7 @@ export default function BankReceive() {
 
     return (
       <>
-        <Header text='Bank Deposit' back={goBack} />
+        <Header text='Bank Deposit' back={goBack} auxIcon={<TransactionsIcon />} auxFunc={handleOrderHistory} auxAriaLabel='View order history' />
         <Content>
           <Padded>
             <FlexCol gap='1.5rem'>
@@ -232,7 +248,7 @@ export default function BankReceive() {
   // Show form if no order yet
   return (
     <>
-      <Header text='Receive' back={goBack} />
+      <Header text='Receive' back={goBack} auxIcon={<TransactionsIcon />} auxFunc={handleOrderHistory} auxAriaLabel='View order history' />
       <Content>
         <Padded>
           <FlexCol gap='1.5rem'>

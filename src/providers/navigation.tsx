@@ -17,6 +17,7 @@ import SendSuccess from '../screens/Wallet/Send/Success'
 import BankReceive from '../screens/Wallet/Receive/BankReceive'
 import BankSend from '../screens/Wallet/Send/BankSend'
 import BankOrderStatus from '../screens/Wallet/BankOrderStatus'
+import BankOrderHistory from '../screens/Wallet/BankOrderHistory'
 import Transaction from '../screens/Wallet/Transaction'
 import Transactions from '../screens/Wallet/Transactions'
 import Unlock from '../screens/Wallet/Unlock'
@@ -77,6 +78,7 @@ export enum Pages {
   BankReceive,
   BankSend,
   BankOrderStatus,
+  BankOrderHistory,
   SendForm,
   SendDetails,
   SendSuccess,
@@ -99,7 +101,7 @@ export enum Tabs {
   Wallet = 'wallet',
 }
 
-const pageTab = {
+const pageTab: Record<Pages, Tabs> = {
   [Pages.AppBoltz]: Tabs.Apps,
   [Pages.AppBoltzSettings]: Tabs.Apps,
   [Pages.AppBoltzSwap]: Tabs.Apps,
@@ -131,6 +133,7 @@ const pageTab = {
   [Pages.BankReceive]: Tabs.Wallet,
   [Pages.BankSend]: Tabs.Wallet,
   [Pages.BankOrderStatus]: Tabs.Wallet,
+  [Pages.BankOrderHistory]: Tabs.Wallet,
   [Pages.SendForm]: Tabs.Wallet,
   [Pages.SendDetails]: Tabs.Wallet,
   [Pages.SendSuccess]: Tabs.Wallet,
@@ -211,6 +214,8 @@ export const pageComponent = (page: Pages, navigationData?: Record<string, unkno
       return <BankSend />
     case Pages.BankOrderStatus:
       return <BankOrderStatus />
+    case Pages.BankOrderHistory:
+      return <BankOrderHistory />
     case Pages.SendForm:
       return <SendForm />
     case Pages.SendDetails:

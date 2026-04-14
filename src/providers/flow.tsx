@@ -54,6 +54,9 @@ export interface BankSendInfo {
   order?: ChimeraOrder
 }
 
+// Bank Order Type - track which order is currently active
+export type BankOrderType = 'receive' | 'send'
+
 export type SendInfo = {
   address?: string
   arkAddress?: string
@@ -87,6 +90,7 @@ interface FlowContextProps {
   txInfo: TxInfo
   bankRecvInfo: BankRecvInfo
   bankSendInfo: BankSendInfo
+  currentBankOrderType?: BankOrderType
   setInitInfo: (arg0: InitInfo) => void
   setKycAuthParams: (arg0: KycAuthParams | undefined) => void
   setNoteInfo: (arg0: NoteInfo) => void
@@ -98,6 +102,7 @@ interface FlowContextProps {
   setTxInfo: (arg0: TxInfo) => void
   setBankRecvInfo: (arg0: BankRecvInfo) => void
   setBankSendInfo: (arg0: BankSendInfo) => void
+  setCurrentBankOrderType: (type: BankOrderType | undefined) => void
 }
 
 export const emptyInitInfo: InitInfo = {
@@ -151,6 +156,7 @@ export const FlowContext = createContext<FlowContextProps>({
   txInfo: undefined,
   bankRecvInfo: emptyBankRecvInfo,
   bankSendInfo: emptyBankSendInfo,
+  currentBankOrderType: undefined,
   setInitInfo: () => {},
   setKycAuthParams: () => {},
   setNoteInfo: () => {},
@@ -162,6 +168,7 @@ export const FlowContext = createContext<FlowContextProps>({
   setTxInfo: () => {},
   setBankRecvInfo: () => {},
   setBankSendInfo: () => {},
+  setCurrentBankOrderType: () => {},
 })
 
 export const FlowProvider = ({ children }: { children: ReactNode }) => {
@@ -176,6 +183,7 @@ export const FlowProvider = ({ children }: { children: ReactNode }) => {
   const [txInfo, setTxInfo] = useState<TxInfo>()
   const [bankRecvInfo, setBankRecvInfo] = useState<BankRecvInfo>(emptyBankRecvInfo)
   const [bankSendInfo, setBankSendInfo] = useState<BankSendInfo>(emptyBankSendInfo)
+  const [currentBankOrderType, setCurrentBankOrderType] = useState<BankOrderType | undefined>()
 
   return (
     <FlowContext.Provider
@@ -191,6 +199,7 @@ export const FlowProvider = ({ children }: { children: ReactNode }) => {
         txInfo,
         bankRecvInfo,
         bankSendInfo,
+        currentBankOrderType,
         setInitInfo,
         setKycAuthParams,
         setNoteInfo,
@@ -202,6 +211,7 @@ export const FlowProvider = ({ children }: { children: ReactNode }) => {
         setTxInfo,
         setBankRecvInfo,
         setBankSendInfo,
+        setCurrentBankOrderType,
       }}
     >
       {children}

@@ -34,10 +34,14 @@ const POLL_INTERVAL = 30000
 
 export default function BankOrderStatus() {
   const { navigate, goBack } = useContext(NavigationContext)
-  const { bankRecvInfo, bankSendInfo } = useContext(FlowContext)
+  const { bankRecvInfo, bankSendInfo, currentBankOrderType } = useContext(FlowContext)
 
-  // Determine which order we're tracking (deposit or withdrawal)
-  const initialOrder = bankRecvInfo.order ?? bankSendInfo.order
+  // Determine which order we're tracking based on the current order type
+  const initialOrder = currentBankOrderType === 'receive' 
+    ? bankRecvInfo.order 
+    : currentBankOrderType === 'send'
+    ? bankSendInfo.order
+    : bankRecvInfo.order ?? bankSendInfo.order // Fallback to any available order
 
   const [loading, setLoading] = useState(!initialOrder)
   const [error, setError] = useState('')
