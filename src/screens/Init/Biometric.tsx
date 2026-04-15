@@ -36,7 +36,7 @@ export default function InitBiometric() {
   }
 
   const handleContinue = () => {
-    navigate(Pages.InitConnect)
+    navigate(Pages.InitPassword)
   }
 
   // If biometrics are already enabled, continue to next step
