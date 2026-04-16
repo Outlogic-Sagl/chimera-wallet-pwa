@@ -116,7 +116,7 @@ export const appConfigs: Record<string, AppConfig> = {
       },
     ],
     urls: {
-      production: 'https://app.chimerawallet.com/gift-cards/',
+      production: 'https://giftcards.chimerawallet.com/gift-cards/',
       staging: 'https://app.staging.chimerawallet.com/gift-cards/',
       development: 'https://app.staging.chimerawallet.com/gift-cards/',
     },
