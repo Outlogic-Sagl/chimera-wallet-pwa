@@ -23,6 +23,12 @@ export default defineConfig({
     allowedHosts: ['.trycloudflare.com', '.ngrok-free.app'],
     // Handle SPA routing - all paths fallback to index.html
     historyApiFallback: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:7071',
+        changeOrigin: true,
+      },
+    },
   },
   // In production, the web server needs to be configured to serve index.html for all routes
   // For most static hosting (Netlify, Vercel, etc.), this is handled automatically

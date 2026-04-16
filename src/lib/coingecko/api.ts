@@ -27,7 +27,7 @@ export interface CoinGeckoMarketData {
   price_change_percentage_24h: number
 }
 
-const COINGECKO_API_BASE = 'https://api.coingecko.com/api/v3'
+const COINGECKO_API_BASE = '/api/coingecko'
 
 class CoinGeckoApi {
   /**
