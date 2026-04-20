@@ -74,7 +74,16 @@ jobs:
         run: pnpm git-info
 
       - name: Build application
-        run: pnpm run build
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BRANCH="${{ github.base_ref }}"
+          fi
+          if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+            pnpm run build --mode production
+          else
+            pnpm run build --mode staging
+          fi
 
       - name: Install API dependencies
         run: pnpm install
