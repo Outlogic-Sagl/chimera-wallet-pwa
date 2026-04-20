@@ -80,10 +80,13 @@ jobs:
             BRANCH="${{ github.base_ref }}"
           fi
           if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
-            pnpm run build --mode production
+            MODE="production"
           else
-            pnpm run build --mode staging
+            MODE="staging"
           fi
+          pnpm git-info
+          pnpm run build:worker -- --mode $MODE
+          pnpm exec vite build --mode $MODE
 
       - name: Install API dependencies
         run: pnpm install
