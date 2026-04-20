@@ -232,13 +232,17 @@ export default function ReceiveAmount() {
     if (!svcWallet) return
 
     const listenForPayments = (event: MessageEvent) => {
+      if (!event.data) return
+      // v0.4 SDK wraps broadcast data under `payload`; fall back to the flat
+      // shape for safety in case an older worker build is still active.
+      const payload = event.data.payload ?? event.data
       let incomingSats = 0
-      if (event.data && event.data.type === 'VTXO_UPDATE') {
-        const newVtxos = event.data.newVtxos as { value: number }[]
+      if (event.data.type === 'VTXO_UPDATE') {
+        const newVtxos = (payload?.newVtxos ?? []) as { value: number }[]
         incomingSats = newVtxos.reduce((acc, v) => acc + v.value, 0)
       }
-      if (event.data && event.data.type === 'UTXO_UPDATE') {
-        const coins = event.data.coins as { value: number }[]
+      if (event.data.type === 'UTXO_UPDATE') {
+        const coins = (payload?.coins ?? []) as { value: number }[]
         incomingSats = coins.reduce((acc, v) => acc + v.value, 0)
       }
       if (incomingSats) {
