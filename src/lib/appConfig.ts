@@ -108,13 +108,6 @@ export const appConfigs: Record<string, AppConfig> = {
     description: 'Buy and redeem gift cards with Bitcoin',
     icon: 'gift-cards',
     live: true,
-    infoSlides: [
-      {
-        title: 'Gift Cards',
-        description: 'Purchase gift cards from hundreds of popular brands using your Bitcoin. Perfect for everyday spending or gifting to friends and family.',
-        image: '/gift.png',
-      },
-    ],
     urls: {
       production: 'https://giftcards.chimerawallet.com/gift-cards/',
       staging: 'https://app.staging.chimerawallet.com/gift-cards/',
