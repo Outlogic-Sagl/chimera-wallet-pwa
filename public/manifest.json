@@ -38,5 +38,9 @@
   "handle_links": "preferred",
   "scope_extensions": [
     { "origin": "https://*.chimerawallet.com" }
-  ]
+  ],
+  "privacy_policy": {
+    "url": "https://chimerawallet.com/app-privacy-policy/"
+  },
+  "id": "/"
 }
