@@ -142,8 +142,8 @@ export default function BankSend() {
       return
     }
 
-    // When KYC email is present and transfer requires KYC, skip bank detail collection
-    const skipBankDetails = validation.kycRequired && validation.kycVerified
+    // When KYC email is present, skip bank detail collection entirely
+    const skipBankDetails = validation.kycVerified
 
     let bankData
     if (!skipBankDetails) {
@@ -358,8 +358,8 @@ export default function BankSend() {
     }
   }
 
-  // When KYC email is present and transfer requires KYC, bank details are not needed
-  const skipBankDetails = validation.kycRequired && validation.kycVerified
+  // When KYC email is present, bank details are not needed regardless of amount
+  const skipBankDetails = validation.kycVerified
   const canSubmit = validation.canProceed && (skipBankDetails || isBankDetailsComplete()) && !loading
 
   return (

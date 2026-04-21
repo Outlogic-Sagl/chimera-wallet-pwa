@@ -9,6 +9,7 @@ import Loading from '../../components/Loading'
 import Button from '../../components/Button'
 import SuccessMessage from '../../components/Success'
 import ErrorMessage from '../../components/Error'
+import Info from '../../components/Info'
 import { FlowContext } from '../../providers/flow'
 import { NavigationContext, Pages } from '../../providers/navigation'
 import { OptionsContext } from '../../providers/options'
@@ -47,6 +48,7 @@ export default function Verification() {
   const [error, setError] = useState('')
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
+  const [isEditingEmail, setIsEditingEmail] = useState(false)
   const [showIosFallback, setShowIosFallback] = useState(false)
   const [iframeLoaded, setIframeLoaded] = useState(false)
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -257,6 +259,8 @@ export default function Verification() {
 
   // Returning user - email already registered
   if (viewState === 'registered') {
+    const savedEmail = getKycEmail() || ''
+    const emailChanged = isEditingEmail && email !== savedEmail
     return (
       <>
         <Header text='KYC - Verification' backFunc={handleBack} />
@@ -271,19 +275,33 @@ export default function Verification() {
               </div>
               <IonInput
                 value={email}
-                readonly
+                readonly={!isEditingEmail}
                 type='email'
+                onIonInput={(e) => {
+                  setEmail(String(e.detail.value ?? ''))
+                  if (emailError) setEmailError('')
+                }}
+                onIonFocus={() => setIsEditingEmail(true)}
+                placeholder='you@example.com'
                 style={{
-                  border: '1px solid var(--ion-color-medium)',
+                  border: `1px solid ${emailChanged ? 'var(--ion-color-warning)' : 'var(--ion-color-medium)'}`,
                   borderRadius: '8px',
                   padding: '0 0.75rem',
                   '--padding-start': '0.75rem',
-                  opacity: 0.7,
+                  opacity: isEditingEmail ? 1 : 0.7,
                 }}
               />
+              {emailChanged ? (
+                <Info color='orange' title='Email change'>
+                  <Text small thin wrap color='orange'>
+                    Changing your email address will require you to re-submit your KYC verification.
+                  </Text>
+                </Info>
+              ) : null}
+              {emailError ? <ErrorMessage error text={emailError} /> : null}
               <Button
-                onClick={handleCheckStatus}
-                label='Check Status'
+                onClick={emailChanged ? handleEmailContinue : handleCheckStatus}
+                label={emailChanged ? 'Re-submit KYC' : 'Check Status'}
               />
             </FlexCol>
           </Padded>
