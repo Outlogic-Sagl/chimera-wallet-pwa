@@ -1,27 +1,31 @@
 import { useContext, useEffect, useState, useRef, useCallback } from 'react'
+import { IonInput } from '@ionic/react'
 import Header from './Header'
 import Content from '../../components/Content'
 import Padded from '../../components/Padded'
 import FlexCol from '../../components/FlexCol'
 import Text, { TextSecondary } from '../../components/Text'
 import Loading from '../../components/Loading'
+import Button from '../../components/Button'
 import SuccessMessage from '../../components/Success'
 import ErrorMessage from '../../components/Error'
+import Info from '../../components/Info'
 import { FlowContext } from '../../providers/flow'
 import { NavigationContext, Pages } from '../../providers/navigation'
 import { OptionsContext } from '../../providers/options'
 import {
   fetchKycStatus,
-  hasCompletedKycOnce,
   getKycWebviewUrl,
   KycStatus,
   confirmMagicLink,
   saveKycTokens,
   saveKycStatus,
+  saveKycEmail,
+  getKycEmail,
 } from '../../lib/kyc'
 import { isIOS } from '../../lib/browser'
 
-type ViewState = 'loading' | 'webview' | 'status' | 'error'
+type ViewState = 'loading' | 'email' | 'registered' | 'webview' | 'status' | 'error'
 
 // Timeout for iframe load detection (ms)
 const IFRAME_LOAD_TIMEOUT = 8000
@@ -42,6 +46,9 @@ export default function Verification() {
   const [statusMessage, setStatusMessage] = useState('')
   const [webviewUrl, setWebviewUrl] = useState('')
   const [error, setError] = useState('')
+  const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [isEditingEmail, setIsEditingEmail] = useState(false)
   const [showIosFallback, setShowIosFallback] = useState(false)
   const [iframeLoaded, setIframeLoaded] = useState(false)
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -96,17 +103,15 @@ export default function Verification() {
           }
         }
 
-        // Check if user has completed KYC before (has tokens stored)
-        if (hasCompletedKycOnce()) {
-          // Fetch current status
-          const statusResponse = await fetchKycStatus()
-          setKycStatus(statusResponse.status)
-          setStatusMessage(statusResponse.message || '')
-          setViewState('status')
+        // Check if user has already provided their email
+        const savedEmail = getKycEmail()
+        if (savedEmail) {
+          // Returning user - show their registered email
+          setEmail(savedEmail)
+          setViewState('registered')
         } else {
-          // First time - show webview to start KYC
-          setWebviewUrl(getKycWebviewUrl())
-          setViewState('webview')
+          // First time - collect email before showing webview
+          setViewState('email')
         }
       } catch {
         setError('Failed to initialize verification. Please try again.')
@@ -224,8 +229,129 @@ export default function Verification() {
   const handleRetry = () => {
     setShowIosFallback(false)
     setIframeLoaded(false)
-    setWebviewUrl(getKycWebviewUrl())
+    setEmail('')
+    setEmailError('')
+    setViewState('email')
+  }
+
+  const validateEmail = (value: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  }
+
+  const handleEmailContinue = () => {
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email address.')
+      return
+    }
+    setEmailError('')
+    saveKycEmail(email)
+    const baseUrl = getKycWebviewUrl()
+    setWebviewUrl(`${baseUrl}?email=${encodeURIComponent(email)}`)
     setViewState('webview')
+  }
+
+  const handleCheckStatus = () => {
+    const savedEmail = getKycEmail() || email
+    const baseUrl = getKycWebviewUrl()
+    setWebviewUrl(`${baseUrl}?email=${encodeURIComponent(savedEmail)}`)
+    setViewState('webview')
+  }
+
+  // Returning user - email already registered
+  if (viewState === 'registered') {
+    const savedEmail = getKycEmail() || ''
+    const emailChanged = isEditingEmail && email !== savedEmail
+    return (
+      <>
+        <Header text='KYC - Verification' backFunc={handleBack} />
+        <Content>
+          <Padded>
+            <FlexCol gap='1.5rem'>
+              <div>
+                <Text>Identity Verification</Text>
+                <TextSecondary>
+                  Your email is registered. Open the verification portal to complete or check your KYC status.
+                </TextSecondary>
+              </div>
+              <IonInput
+                value={email}
+                readonly={!isEditingEmail}
+                type='email'
+                onIonInput={(e) => {
+                  setEmail(String(e.detail.value ?? ''))
+                  if (emailError) setEmailError('')
+                }}
+                onIonFocus={() => setIsEditingEmail(true)}
+                placeholder='you@example.com'
+                style={{
+                  border: `1px solid ${emailChanged ? 'var(--ion-color-warning)' : 'var(--ion-color-medium)'}`,
+                  borderRadius: '8px',
+                  padding: '0 0.75rem',
+                  '--padding-start': '0.75rem',
+                  opacity: isEditingEmail ? 1 : 0.7,
+                }}
+              />
+              {emailChanged ? (
+                <Info color='orange' title='Email change'>
+                  <Text small thin wrap color='orange'>
+                    Changing your email address will require you to re-submit your KYC verification.
+                  </Text>
+                </Info>
+              ) : null}
+              {emailError ? <ErrorMessage error text={emailError} /> : null}
+              <Button
+                onClick={emailChanged ? handleEmailContinue : handleCheckStatus}
+                label={emailChanged ? 'Re-submit KYC' : 'Check Status'}
+              />
+            </FlexCol>
+          </Padded>
+        </Content>
+      </>
+    )
+  }
+
+  // Email capture state
+  if (viewState === 'email') {
+    return (
+      <>
+        <Header text='KYC - Verification' backFunc={handleBack} />
+        <Content>
+          <Padded>
+            <FlexCol gap='1.5rem'>
+              <div>
+                <Text>Enter your email address</Text>
+                <TextSecondary>
+                  Enter your email address to begin your KYC verification.
+                </TextSecondary>
+              </div>
+              <IonInput
+                value={email}
+                onIonInput={(e) => {
+                  setEmail(String(e.detail.value ?? ''))
+                  if (emailError) setEmailError('')
+                }}
+                placeholder='you@example.com'
+                type='email'
+                autocomplete='email'
+                style={{
+                  border: '1px solid var(--ion-color-medium)',
+                  borderRadius: '8px',
+                  padding: '0 0.75rem',
+                  '--padding-start': '0.75rem',
+                }}
+              />
+              {emailError ? (
+                <ErrorMessage error text={emailError} />
+              ) : null}
+              <Button
+                onClick={handleEmailContinue}
+                label='Continue'
+              />
+            </FlexCol>
+          </Padded>
+        </Content>
+      </>
+    )
   }
 
   // Loading state
