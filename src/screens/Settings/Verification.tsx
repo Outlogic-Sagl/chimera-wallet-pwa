@@ -100,9 +100,10 @@ export default function Verification() {
             const mapped = mapVerificationStatus(result.loginModel.verificationStatus?.status)
             setKycStatus(mapped)
             setStatusMessage(result.loginModel.verificationStatus?.notes || '')
-            if (mapped === 'confirmed') {
+            if (mapped === 'confirmed' || mapped === 'pending' || mapped === 'rejected') {
               setViewState('status')
             } else {
+              // incomplete or more_info_needed — open webview to continue
               const baseUrl = getKycWebviewUrl()
               setWebviewUrl(`${baseUrl}?email=${encodeURIComponent(pollEmail)}`)
               setViewState('webview')
@@ -224,6 +225,7 @@ export default function Verification() {
         saveKycStatus(status)
         setKycStatus(status)
         if (status === 'confirmed' || status === 'pending' || status === 'rejected') setViewState('status')
+        if (status === 'incomplete' || status === 'more_info_needed') { /* stay in webview */ }
       }
       if (event.data?.type === 'kyc-complete') {
         saveKycStatus('pending')
@@ -305,7 +307,15 @@ export default function Verification() {
         const statusResponse = await fetchKycStatus(token)
         setKycStatus(statusResponse.status)
         setStatusMessage(statusResponse.message || '')
-        setViewState('status')
+        if (statusResponse.status === 'incomplete' || statusResponse.status === 'more_info_needed') {
+          // Open webview so user can continue/provide more info
+          const savedEmail = getKycEmail() || email
+          const baseUrl = getKycWebviewUrl()
+          setWebviewUrl(`${baseUrl}?email=${encodeURIComponent(savedEmail)}`)
+          setViewState('webview')
+        } else {
+          setViewState('status')
+        }
         return
       } catch {
         /* fall through */

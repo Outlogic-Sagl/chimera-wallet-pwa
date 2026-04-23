@@ -10,7 +10,7 @@ const KYC_EMAIL_KEY = 'kyc_email'
 const KYC_STATUS_KEY = 'kyc_status'
 
 // KYC Status Types
-export type KycStatus = 'not_started' | 'pending' | 'confirmed' | 'rejected' | 'expired'
+export type KycStatus = 'not_started' | 'pending' | 'confirmed' | 'rejected' | 'incomplete' | 'more_info_needed'
 
 export interface KycTokens {
   accessToken: string
@@ -403,17 +403,15 @@ export const mapVerificationStatus = (status?: string): KycStatus => {
   if (!status) return 'not_started'
   switch (status.toLowerCase()) {
     case 'verified':
-    case 'confirmed':
-    case 'approved':
       return 'confirmed'
     case 'pending':
-    case 'moreinfoneeded':
-    case 'incomplete':
       return 'pending'
     case 'rejected':
       return 'rejected'
-    case 'expired':
-      return 'expired'
+    case 'moreinfoneeded':
+      return 'more_info_needed'
+    case 'incomplete':
+      return 'incomplete'
     default:
       return 'not_started'
   }
