@@ -1,4 +1,5 @@
 import { isTestEnvironment } from '../lib/appConfig'
+import { getKycApiUrl, fetchKycBankData } from '../lib/kyc'
 
 // Base URLs
 const CHIMERA_API_STAGING = 'https://api.staging.chimerawallet.com/v1'
@@ -124,7 +125,7 @@ export const getSupportedAssets = async (): Promise<SupportedAssetsResponse> => 
 
 /**
  * Get order status by ID
- * 
+ *
  * Orders created via /otc/deposit/ or /otc/withdraw/ are regular Chimera orders
  * and can be queried using the /order/info/<id>/ endpoint.
  */
@@ -135,7 +136,7 @@ export const getOrderStatus = async (orderId: string): Promise<ChimeraOrder> => 
 
   const baseUrl = getBaseUrl()
   const url = `${baseUrl}/order/info/${orderId}/`
-  
+
   const response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -149,12 +150,12 @@ export const getOrderStatus = async (orderId: string): Promise<ChimeraOrder> => 
   }
 
   const data = await response.json()
-  
+
   // The endpoint returns { order: ChimeraOrder }, extract the order
   if (data.order) {
     return data.order
   }
-  
+
   return data
 }
 
@@ -221,7 +222,7 @@ export interface BankWithdrawResponse {
 export const createBankDeposit = async (payload: BankDepositPayload): Promise<BankDepositResponse> => {
   const baseUrl = getBaseUrl()
   const url = `${baseUrl}/otc/deposit/`
-  
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -239,7 +240,7 @@ export const createBankDeposit = async (payload: BankDepositPayload): Promise<Ba
   }
 
   const data = await response.json()
-  
+
   if (data.message) {
     throw new Error(data.message)
   }
@@ -256,30 +257,56 @@ export const createBankWithdraw = async (params: {
   fromAmount: number
   fromAsset: string
   toAsset: string
+  circuit?: BankCircuit
   bankData?: BankData
 }): Promise<BankWithdrawResponse> => {
-  const { email, fromAmount, fromAsset, toAsset, bankData } = params
+  const { email, fromAmount, fromAsset, toAsset, circuit, bankData } = params
   const baseUrl = getBaseUrl()
 
-  // When no bank data is provided (KYC email flow), send email-only payload
+  // When no bank data is provided (KYC email flow), fetch bank details from IDFlow
   if (!bankData) {
-    const emailOnlyPayload = {
+    const kycBankData = await fetchKycBankData()
+
+    const basePayload = {
       email,
       from_amount: fromAmount,
       from_asset: fromAsset,
       to_asset: toAsset,
+      destination_type: circuit,
     }
-    const emailOnlyResponse = await fetch(`${baseUrl}/otc/withdraw/`, {
+
+    let kycPayload: Record<string, unknown>
+    if (circuit === 'us' && kycBankData?.accountNumber && kycBankData?.routingNumber) {
+      kycPayload = {
+        ...basePayload,
+        destination_bank_account_number: kycBankData.accountNumber,
+        destination_bank_routing_number: kycBankData.routingNumber,
+      }
+    } else if (kycBankData?.iban && kycBankData?.accountHolderName) {
+      kycPayload = {
+        ...basePayload,
+        destination_bank_address: kycBankData.iban,
+        destination_bank_name: kycBankData.accountHolderName,
+        ...(circuit === 'swift' && kycBankData.accountNumber
+          ? { destination_bank_account_number: kycBankData.accountNumber }
+          : {}),
+      }
+    } else {
+      // Fallback: send what we have, let API decide
+      kycPayload = { ...basePayload }
+    }
+
+    const kycResponse = await fetch(`${baseUrl}/otc/withdraw/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(emailOnlyPayload),
+      body: JSON.stringify(kycPayload),
     })
-    if (!emailOnlyResponse.ok) {
-      const errorData = await emailOnlyResponse.json().catch(() => ({}))
+    if (!kycResponse.ok) {
+      const errorData = await kycResponse.json().catch(() => ({}))
       if (errorData.message) throw new Error(errorData.message)
-      throw new Error(`Failed to create withdraw order: ${emailOnlyResponse.status}`)
+      throw new Error(`Failed to create withdraw order: ${kycResponse.status}`)
     }
-    return emailOnlyResponse.json()
+    return kycResponse.json()
   }
 
   let payload: BankWithdrawPayload
@@ -352,4 +379,68 @@ export const createBankWithdraw = async (params: {
   }
 
   return response.json()
+}
+
+// ============================================
+// Referral API Functions
+// ============================================
+
+export interface ReferralLinkResponse {
+  link: string
+}
+
+export interface ReferralRewardResponse {
+  balance: number // CHF
+}
+
+export const getReferralLink = async (accessToken: string): Promise<ReferralLinkResponse> => {
+  const baseUrl = getKycApiUrl()
+  const response = await fetch(`${baseUrl}/api/Referrals/link`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  if (!response.ok) {
+    throw new Error(`Failed to get referral link: ${response.status}`)
+  }
+  const data = await response.json()
+  // Handle various C# API response shapes
+  const link: string = typeof data === 'string' ? data : (data.referralLink ?? '')
+  return { link }
+}
+
+export const getReferralReward = async (accessToken: string): Promise<ReferralRewardResponse> => {
+  const baseUrl = getKycApiUrl()
+  const response = await fetch(`${baseUrl}/api/Referrals/reward-balance`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  if (!response.ok) {
+    throw new Error(`Failed to get referral reward: ${response.status}`)
+  }
+  const data = await response.json()
+  // Handle various C# API response shapes
+  const balance: number = typeof data === 'number' ? data : (data.rewardBalance ?? 0)
+  return { balance }
+}
+
+export const claimReferralReward = async (accessToken: string, address: string): Promise<void> => {
+  const baseUrl = getKycApiUrl()
+  const response = await fetch(`${baseUrl}/api/Referrals/reward-address`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ address }),
+  })
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error(errorData.message || `Failed to claim referral reward: ${response.status}`)
+  }
 }
