@@ -107,11 +107,12 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       defaultConfig.aspUrl = 'http://localhost:7070'
       window.location.hash = ''
     }
-    let config = readConfigFromStorage() ?? { ...defaultConfig }
+    const stored = readConfigFromStorage()
+    let config = stored ?? { ...defaultConfig }
     // allow upgradability
     config = { ...defaultConfig, ...config }
-    // env var is authoritative — override cached localStorage value
-    if (import.meta.env.VITE_ARK_SERVER) config.aspUrl = import.meta.env.VITE_ARK_SERVER
+    // env var sets the default server, but only when no user config is stored
+    if (import.meta.env.VITE_ARK_SERVER && !stored) config.aspUrl = import.meta.env.VITE_ARK_SERVER
     updateConfig(config)
     setConfigLoaded(true)
   }, [configLoaded])
