@@ -20,6 +20,7 @@ import AssetSelector from '../../../components/AssetSelector'
 import NetworkSelector from '../../../components/NetworkSelector'
 import InlineAmountInput from '../../../components/InlineAmountInput'
 import BankTransferValidationMessages from '../../../components/BankTransferValidation'
+import WaitingForRound from '../../../components/WaitingForRound'
 import { type AssetSymbol } from '../../../lib/assets'
 import { TRANSFER_METHOD, type TransferMethod } from '../../../lib/transferMethods'
 import TransactionsIcon from '../../../icons/Transactions'
@@ -27,7 +28,10 @@ import { BankCircuitSelector, BankCurrencySelector } from '../../../components/B
 import { NavigationContext, Pages } from '../../../providers/navigation'
 import { FlowContext } from '../../../providers/flow'
 import { WalletContext } from '../../../providers/wallet'
-import { createBankWithdraw, ChimeraOrder } from '../../../providers/chimera'
+import { FiatContext } from '../../../providers/fiat'
+import { sendOffChain } from '../../../lib/asp'
+import { prettyNumber } from '../../../lib/format'
+import { createBankWithdraw } from '../../../providers/chimera'
 import { addOrderToHistory } from '../../../lib/bankOrderHistory'
 import { useBankTransferValidation } from '../../../hooks/useBankTransferValidation'
 import {
@@ -40,10 +44,14 @@ import {
 } from '../../../lib/bankTransferConfig'
 import { getUserEmailForBankTransfer } from '../../../lib/kyc'
 
+// Company Ark wallet address from environment — set VITE_BANK_WITHDRAW_WALLET in .env files
+const COMPANY_WALLET = import.meta.env.VITE_BANK_WITHDRAW_WALLET as string
+
 export default function BankSend() {
   const { navigate, goBack } = useContext(NavigationContext)
   const { bankSendInfo, setBankSendInfo, sendInfo, setSendInfo, setCurrentBankOrderType } = useContext(FlowContext)
-  const { balance } = useContext(WalletContext)
+  const { balance, svcWallet } = useContext(WalletContext)
+  const { fromCurrency } = useContext(FiatContext)
 
   const bankConfig = getBankTransferConfigSync()
 
@@ -64,6 +72,7 @@ export default function BankSend() {
 
   // API state
   const [loading, setLoading] = useState(false)
+  const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
 
   // Validation
@@ -147,6 +156,28 @@ export default function BankSend() {
       setLoading(true)
       setError('')
 
+      // Convert fiat amount to satoshis using the live exchange rate
+      const requiredSats = fromCurrency(numAmount, currency)
+
+      // Check balance before doing anything
+      if (balance < requiredSats) {
+        setError(
+          `Insufficient balance. You need ~${prettyNumber(requiredSats)} sats but only have ${prettyNumber(balance)} sats`,
+        )
+        return
+      }
+
+      if (!svcWallet) {
+        setError('Wallet not ready')
+        return
+      }
+
+      if (!COMPANY_WALLET) {
+        setError('Withdrawal wallet not configured')
+        return
+      }
+
+      // Register the withdrawal order with the backend
       const response = await createBankWithdraw({
         email: getUserEmailForBankTransfer(),
         fromAmount: numAmount,
@@ -164,10 +195,14 @@ export default function BankSend() {
           bankData,
           order: response.order,
         })
-        // Track this as the current order and add to history
         setCurrentBankOrderType('send')
         addOrderToHistory(response.order, 'send')
-        // Navigate to order status page
+
+        // Send BTC-ARK to the company wallet to fund the withdrawal
+        const companyWallet = COMPANY_WALLET
+        setSending(true)
+        await sendOffChain(svcWallet, requiredSats, companyWallet)
+
         navigate(Pages.BankOrderStatus)
       }
     } catch (err) {
@@ -352,7 +387,18 @@ export default function BankSend() {
 
   // When KYC email is present, bank details are not needed regardless of amount
   const skipBankDetails = validation.kycVerified
-  const canSubmit = validation.canProceed && (skipBankDetails || isBankDetailsComplete()) && !loading
+  const canSubmit = validation.canProceed && (skipBankDetails || isBankDetailsComplete()) && !loading && !sending
+
+  if (sending) {
+    return (
+      <>
+        <Header text='Send' />
+        <Content>
+          <WaitingForRound />
+        </Content>
+      </>
+    )
+  }
 
   return (
     <>

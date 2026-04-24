@@ -127,16 +127,26 @@ export default function BankOrderStatus() {
   const isRejected = order.status === 'REJECTED'
   const isProcessing = ['DEPOSIT_RECEIVED', 'DEPOSIT_CONFIRMED', 'PROCESSING'].includes(order.status)
 
-  // Determine order type (deposit vs withdrawal)
-  const isDepositOrder = order.from_asset !== 'BTC' // Fiat → Crypto
-  const isWithdrawalOrder = order.from_asset === 'BTC' // Crypto → Fiat
+  // Use currentBankOrderType as the source of truth. Fallback: anything with BTC/BTC-ARK as from_asset is a withdrawal.
+  const isWithdrawalOrder =
+    currentBankOrderType === 'send' ||
+    (currentBankOrderType === undefined &&
+      (order.from_asset === 'BTC' || order.from_asset?.startsWith('BTC')))
+  const isDepositOrder = !isWithdrawalOrder
+
+  // Fiat amount the user specified for a withdrawal
+  const withdrawalFiatDisplay = `${Number(bankSendInfo.amount).toFixed(2)} ${bankSendInfo.currency}`
 
   // Build table data
   const tableData: TableData = [
     ['Order ID', order.id.slice(0, 8) + '...'],
     ['Status', order.status.replace(/_/g, ' ')],
-    ['From', `${order.from_amount} ${order.from_asset}`],
-    ['To', order.to_asset],
+    ...(isWithdrawalOrder
+      ? ([['To', `${Number(bankSendInfo.amount).toFixed(2)} ${bankSendInfo.currency}`]] as TableData)
+      : ([
+          ['From', `${order.from_amount} ${order.from_asset}`],
+          ['To', order.to_asset],
+        ] as TableData)),
     ['Created', prettyDate(new Date(order.created_at).getTime())],
   ]
 
@@ -188,18 +198,18 @@ export default function BankOrderStatus() {
               <Info color='yellow' title='Processing'>
                 <TextSecondary>
                   {isDepositOrder
-                    ? 'Your deposit has been received and is being processed.'
-                    : 'Your crypto has been received and is being processed.'}
+                    ? 'Your bank deposit has been received and is being processed.'
+                    : 'Your payment has been received. We are processing your withdrawal and will send the funds to your bank account.'}
                 </TextSecondary>
               </Info>
             ) : null}
 
             {isWaitingForDeposit ? (
-              <Info color='blue' title={isDepositOrder ? 'Awaiting Bank Transfer' : 'Awaiting Crypto Deposit'}>
+              <Info color='blue' title={isDepositOrder ? 'Awaiting Bank Transfer' : 'Withdrawal Submitted'}>
                 <TextSecondary>
                   {isDepositOrder
                     ? 'Waiting for your bank transfer. Once received, your order will be processed.'
-                    : 'Waiting for your crypto deposit. Please send the required amount to complete the order.'}
+                    : `Your withdrawal is being processed. You will receive ${withdrawalFiatDisplay} in your bank account once confirmed.`}
                 </TextSecondary>
               </Info>
             ) : null}
@@ -250,29 +260,13 @@ export default function BankOrderStatus() {
               </FlexCol>
             ) : null}
 
-            {/* Crypto Deposit Details (for withdrawal orders waiting for crypto) */}
-            {isWaitingForDeposit && isWithdrawalOrder && order.deposit_crypto_address ? (
-              <Shadow fat>
-                <FlexCol gap='0.75rem'>
-                  <Text bold>Send Crypto To</Text>
-                  <FlexCol gap='0.5rem'>
-                    <Text small color='var(--white70)'>
-                      Deposit Address
-                    </Text>
-                    <div style={{ wordBreak: 'break-all' }}>
-                      <Text small bold>
-                        {order.deposit_crypto_address}
-                      </Text>
-                    </div>
-                  </FlexCol>
-                  <Info color='orange' title='Important'>
-                    <TextSecondary>
-                      Send exactly {order.from_amount} {order.from_asset} to this address to complete your withdrawal.
-                      Your {order.to_asset} will be sent to your bank account once the crypto deposit is confirmed.
-                    </TextSecondary>
-                  </Info>
-                </FlexCol>
-              </Shadow>
+            {/* Completed withdrawal message */}
+            {isCompleted && isWithdrawalOrder ? (
+              <Info color='green' title='Funds Sent'>
+                <TextSecondary>
+                  {withdrawalFiatDisplay} has been sent to your bank account.
+                </TextSecondary>
+              </Info>
             ) : null}
           </FlexCol>
         </Padded>
@@ -289,7 +283,11 @@ export default function BankOrderStatus() {
         ) : null}
         <Button onClick={handleBackToWallet} label='Back to Wallet' />
         {isCompleted || isExpired || isCancelled || isRejected ? (
-          <Button onClick={() => navigate(Pages.ReceiveAmount)} label='New Transfer' secondary />
+          <Button
+            onClick={() => navigate(isWithdrawalOrder ? Pages.BankSend : Pages.ReceiveAmount)}
+            label='New Transfer'
+            secondary
+          />
         ) : null}
       </ButtonsOnBottom>
     </>
