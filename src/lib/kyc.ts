@@ -8,9 +8,12 @@ const KYC_TOKEN_EXPIRY_KEY = 'kyc_token_expiry'
 const KYC_USER_ID_KEY = 'kyc_user_id'
 const KYC_EMAIL_KEY = 'kyc_email'
 const KYC_STATUS_KEY = 'kyc_status'
+const KYC_LAST_VIEW_KEY = 'kyc_last_view'
+const KYC_WEBVIEW_URL_KEY = 'kyc_webview_url'
+const KYC_LAST_SESSION_ID_KEY = 'kyc_last_session_id'
 
 // KYC Status Types
-export type KycStatus = 'not_started' | 'pending' | 'confirmed' | 'rejected' | 'expired'
+export type KycStatus = 'not_started' | 'pending' | 'confirmed' | 'rejected' | 'incomplete' | 'more_info_needed'
 
 export interface KycTokens {
   accessToken: string
@@ -127,6 +130,27 @@ export const clearKycData = (): void => {
   localStorage.removeItem(KYC_USER_ID_KEY)
   localStorage.removeItem(KYC_EMAIL_KEY)
   localStorage.removeItem(KYC_STATUS_KEY)
+  localStorage.removeItem(KYC_LAST_VIEW_KEY)
+  localStorage.removeItem(KYC_WEBVIEW_URL_KEY)
+  localStorage.removeItem(KYC_LAST_SESSION_ID_KEY)
+}
+
+export const saveKycLastView = (view: string, webviewUrl?: string, sessionId?: string): void => {
+  localStorage.setItem(KYC_LAST_VIEW_KEY, view)
+  if (webviewUrl) localStorage.setItem(KYC_WEBVIEW_URL_KEY, webviewUrl)
+  if (sessionId) localStorage.setItem(KYC_LAST_SESSION_ID_KEY, sessionId)
+}
+
+export const getKycLastView = (): { view: string; webviewUrl: string | null; sessionId: string | null } => ({
+  view: localStorage.getItem(KYC_LAST_VIEW_KEY) ?? '',
+  webviewUrl: localStorage.getItem(KYC_WEBVIEW_URL_KEY),
+  sessionId: localStorage.getItem(KYC_LAST_SESSION_ID_KEY),
+})
+
+export const clearKycLastView = (): void => {
+  localStorage.removeItem(KYC_LAST_VIEW_KEY)
+  localStorage.removeItem(KYC_WEBVIEW_URL_KEY)
+  localStorage.removeItem(KYC_LAST_SESSION_ID_KEY)
 }
 
 export const hasCompletedKycOnce = (): boolean => {
@@ -194,6 +218,9 @@ export const refreshKycToken = async (): Promise<KycTokens | null> => {
   const refreshToken = getKycRefreshToken()
   if (!refreshToken) return null
 
+  const accessToken = getKycAccessToken()
+  if (!accessToken) return null
+
   const apiUrl = getKycApiUrl()
   try {
     const response = await fetch(`${apiUrl}/api/auth/refresh-token`, {
@@ -202,6 +229,7 @@ export const refreshKycToken = async (): Promise<KycTokens | null> => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        accessToken,
         refreshToken,
       }),
     })
@@ -403,17 +431,15 @@ export const mapVerificationStatus = (status?: string): KycStatus => {
   if (!status) return 'not_started'
   switch (status.toLowerCase()) {
     case 'verified':
-    case 'confirmed':
-    case 'approved':
       return 'confirmed'
     case 'pending':
-    case 'moreinfoneeded':
-    case 'incomplete':
       return 'pending'
     case 'rejected':
       return 'rejected'
-    case 'expired':
-      return 'expired'
+    case 'moreinfoneeded':
+      return 'more_info_needed'
+    case 'incomplete':
+      return 'incomplete'
     default:
       return 'not_started'
   }
