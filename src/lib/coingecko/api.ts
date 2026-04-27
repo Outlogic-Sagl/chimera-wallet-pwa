@@ -95,7 +95,7 @@ class CoinGeckoApi {
   async getHistoricalPrices(
     coinId: CoinGeckoAssetID,
     vsCurrency: string = 'usd',
-    days: number = 30,
+    days: number | 'max' = 30,
   ): Promise<CoinGeckoHistoricalData> {
     // Check cache first
     const cached = coingeckoCache.getCachedHistorical(coinId, vsCurrency, days)

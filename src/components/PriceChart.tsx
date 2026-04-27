@@ -10,12 +10,12 @@ interface PriceChartProps {
   vsCurrency?: string
 }
 
-const TIMEFRAME_DAYS: Record<Timeframe, number> = {
+const TIMEFRAME_DAYS: Record<Timeframe, number | 'max'> = {
   '1D': 1,
   '1W': 7,
   '1M': 30,
   '1Y': 365,
-  MAX: 1825, // 5 years
+  MAX: 'max',
 }
 
 const TIMEFRAMES: Timeframe[] = ['1D', '1W', '1M', '1Y', 'MAX']
