@@ -764,7 +764,7 @@ export default function Verification() {
               onError={handleIframeError}
               style={{
                 width: '100%',
-                height: showIosFallback ? 'calc(100vh - 250px)' : 'calc(100vh - 100px)',
+                height: showIosFallback ? 'calc(100vh - 250px)' : 'calc(100vh - 175px)',
                 border: 'none',
                 borderRadius: '8px',
                 // iOS-specific: ensure visibility and touch handling
