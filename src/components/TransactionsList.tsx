@@ -10,10 +10,22 @@ import { FiatContext } from '../providers/fiat'
 import Focusable from './Focusable'
 import { hapticSubtle } from '../lib/haptics'
 import { ASSETS, type AssetSymbol } from '../lib/assets'
+import { getTxStatus, TxStatus } from '../lib/txStatus'
+import { AspContext } from '../providers/asp'
+
+const LIST_STATUS: Record<TxStatus, { text: string; color: string }> = {
+  Settled: { text: 'Confirmed', color: 'var(--green-positive)' },
+  Preconfirmed: { text: 'Confirmed', color: 'var(--green-positive)' },
+  'Pending boarding': { text: 'Pending', color: 'var(--orange)' },
+  Unconfirmed: { text: 'Pending', color: 'var(--orange)' },
+  Expired: { text: 'Failed', color: 'var(--red)' },
+}
 
 const TransactionLine = ({ tx, onClick }: { tx: Tx; onClick: () => void }) => {
   const { config } = useContext(ConfigContext)
   const { toFiat } = useContext(FiatContext)
+  const { aspInfo } = useContext(AspContext)
+  const boardingExitDelay = Number(aspInfo?.boardingExitDelay || 0)
 
   // Convert satoshis to BTC
   const btcAmount = tx.amount / Math.pow(10, ASSETS.BTC.precision)
@@ -32,15 +44,8 @@ const TransactionLine = ({ tx, onClick }: { tx: Tx; onClick: () => void }) => {
     ? `${prefix} ${fiatSymbol}${fiatAmount.toFixed(2)}`
     : prettyHide(fiatAmount, config.fiat)
 
-  // Get status
-  const getStatus = () => {
-    if (tx.settled) return { text: 'Confirmed', color: 'var(--green-positive)' }
-    if (tx.preconfirmed) return { text: 'Confirmed', color: 'var(--green-positive)' }
-    if (tx.boardingTxid) return { text: 'Processing', color: 'var(--yellow)' }
-    return { text: 'Unknown', color: 'var(--grey)' }
-  }
-
-  const status = getStatus()
+  const statusText = getTxStatus(tx, boardingExitDelay)
+  const status = LIST_STATUS[statusText] ?? { text: statusText, color: 'var(--grey)' }
   const date = tx.createdAt ? prettyDate(tx.createdAt) : 'Unknown date'
   const action = tx.type === 'sent' ? `Sent ${ASSETS.BTC.symbol}` : `Received ${ASSETS.BTC.symbol}`
 

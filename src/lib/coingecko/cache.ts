@@ -15,7 +15,7 @@ interface PriceCacheKey {
 interface HistoricalCacheKey {
   symbol: string
   vsCurrency: string
-  days: number
+  days: number | 'max'
 }
 
 // Cache expiration times (in milliseconds)
@@ -53,14 +53,15 @@ class CoinGeckoCache {
   /**
    * Generate cache key for historical data
    */
-  private getHistoricalCacheKey(symbol: string, vsCurrency: string, days: number): string {
+  private getHistoricalCacheKey(symbol: string, vsCurrency: string, days: number | 'max'): string {
     return `historical:${symbol}:${vsCurrency}:${days}`
   }
 
   /**
    * Get cache expiry time based on days parameter
    */
-  private getHistoricalExpiry(days: number): number {
+  private getHistoricalExpiry(days: number | 'max'): number {
+    if (days === 'max') return CACHE_EXPIRY.HISTORICAL_MAX
     if (days <= 1) return CACHE_EXPIRY.HISTORICAL_1D
     if (days <= 7) return CACHE_EXPIRY.HISTORICAL_1W
     if (days <= 30) return CACHE_EXPIRY.HISTORICAL_1M
@@ -110,7 +111,7 @@ class CoinGeckoCache {
   /**
    * Get cached historical data
    */
-  getCachedHistorical(symbol: string, vsCurrency: string, days: number): CoinGeckoHistoricalData | null {
+  getCachedHistorical(symbol: string, vsCurrency: string, days: number | 'max'): CoinGeckoHistoricalData | null {
     const key = this.getHistoricalCacheKey(symbol, vsCurrency, days)
     const entry = this.historicalCache.get(key)
 
@@ -125,7 +126,7 @@ class CoinGeckoCache {
   /**
    * Set cached historical data
    */
-  setCachedHistorical(symbol: string, vsCurrency: string, days: number, data: CoinGeckoHistoricalData): void {
+  setCachedHistorical(symbol: string, vsCurrency: string, days: number | 'max', data: CoinGeckoHistoricalData): void {
     const key = this.getHistoricalCacheKey(symbol, vsCurrency, days)
     const now = Date.now()
     const expiry = this.getHistoricalExpiry(days)

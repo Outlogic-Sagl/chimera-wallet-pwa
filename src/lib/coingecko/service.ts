@@ -137,7 +137,7 @@ export class CoinGeckoConversionService {
   /**
    * Get historical prices for an asset
    */
-  static async getHistoricalPrices(symbol: string, vsCurrency: string = 'usd', days: number = 30) {
+  static async getHistoricalPrices(symbol: string, vsCurrency: string = 'usd', days: number | 'max' = 30) {
     const coingeckoId = getCoingeckoIdForSymbol(symbol)
 
     if (!coingeckoId) {
