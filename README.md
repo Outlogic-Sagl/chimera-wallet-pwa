@@ -1,20 +1,4 @@
-# 👾 Arkade Wallet
-
-Arkade Wallet is the entry-point to the Arkade ecosystem—a self-custodial Bitcoin wallet delivered as a lightweight Progressive Web App (installable on mobile or desktop in seconds, no app-store gatekeepers). Built around the open-source ARK protocol, it speaks natively to any [arkd](https://github.com/arkade-os/arkd) instance, letting you create, send, and receive Virtual Transaction Outputs (VTXOs) for instant, off-chain pre-confirmations and batched, fee-efficient on-chain settlement.
-
-## Screenshots
-
-<!-- Using a table for more consistent layout -->
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img src="./mockup/new-wallet.png" alt="New Wallet" width="250">
-    </td>
-    <td width="50%" align="center">
-      <img src="./mockup/home-arkade-wallet.png" alt="Home Screen" width="250">
-    </td>
-  </tr>
-</table>
+# Chimera Wallet
 
 ## Environment Variables
 
